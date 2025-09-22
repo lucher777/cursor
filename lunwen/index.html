@@ -23,37 +23,119 @@
         }
         .section:last-child { border-bottom: none; }
         .section-title { font-size: 16px; font-weight: 500; color: #333; margin-bottom: 16px; }
-        .config-row { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
-        .config-item { display: flex; flex-direction: column; gap: 4px; }
-        .config-item label { font-size: 14px; color: #666; }
+        
+        /* 优化配置区域布局 */
+        .config-main-row {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        
+        .api-config {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .detail-config {
+            flex: 0 0 auto;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .config-item { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+        }
+        
+        .config-item label { 
+            font-size: 14px; 
+            color: #666; 
+            white-space: nowrap;
+        }
+        
         .config-item select, .config-item input {
-            padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;
-            font-size: 14px; min-width: 120px;
+            padding: 8px 12px; 
+            border: 1px solid #d9d9d9; 
+            border-radius: 4px;
+            font-size: 14px; 
+            min-width: 120px;
         }
-        .config-item input { min-width: 200px; }
+        
+        .config-item input { 
+            min-width: 200px; 
+        }
+        
         .detail-level-group {
-            display: flex; gap: 8px; align-items: center;
+            display: flex; 
+            gap: 12px; 
+            align-items: center;
+            flex-wrap: wrap;
         }
+        
         .detail-level-group input[type="radio"] {
-            min-width: auto; margin: 0 4px 0 0;
+            min-width: auto; 
+            margin: 0 4px 0 0;
         }
+        
         .detail-level-group label {
-            font-size: 14px; color: #333; margin-bottom: 0; cursor: pointer;
-            display: flex; align-items: center; gap: 4px;
+            font-size: 14px; 
+            color: #333; 
+            margin-bottom: 0; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            gap: 4px;
+            white-space: nowrap;
         }
+        
         .detail-description {
-            font-size: 12px; color: #999; margin-top: 8px;
-            padding: 8px 12px; background: #f8f9fa; border-radius: 4px;
+            font-size: 12px; 
+            color: #999; 
+            margin-top: 8px;
+            padding: 8px 12px; 
+            background: #f8f9fa; 
+            border-radius: 4px;
             border-left: 3px solid #1890ff;
         }
+        
         .test-btn {
-            background: #1890ff; color: white; border: none; padding: 8px 16px;
-            border-radius: 4px; cursor: pointer; font-size: 14px; margin-left: 8px;
+            background: #1890ff; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px;
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            margin-left: 8px;
+            white-space: nowrap;
         }
-        .test-btn:hover { background: #40a9ff; }
-        .status { margin-left: 8px; font-size: 14px; }
-        .status.connected { color: #52c41a; }
-        .status.disconnected { color: #ff4d4f; }
+        
+        .test-btn:hover { 
+            background: #40a9ff; 
+        }
+        
+        .status { 
+            margin-left: 8px; 
+            font-size: 14px; 
+            white-space: nowrap;
+        }
+        
+        .status.connected { 
+            color: #52c41a; 
+        }
+        
+        .status.disconnected { 
+            color: #ff4d4f; 
+        }
+        
         .upload-area {
             border: 2px dashed #d9d9d9; border-radius: 6px; padding: 40px; text-align: center;
             background: #fafafa; transition: all 0.3s; cursor: pointer;
@@ -134,10 +216,41 @@
             border-radius: 4px; cursor: pointer; font-size: 14px; margin: 10px 0;
         }
         .toggle-btn:hover { background: #40a9ff; }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .config-main-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .api-config {
+                min-width: auto;
+            }
+            
+            .detail-config {
+                min-width: auto;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .config-row { flex-direction: column; align-items: stretch; }
-            .config-item, .config-item select, .config-item input { width: 100%; min-width: auto; }
-            .detail-level-group { justify-content: flex-start; flex-wrap: wrap; }
+            .api-config {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            
+            .config-item, 
+            .config-item select, 
+            .config-item input { 
+                width: 100%; 
+                min-width: auto; 
+            }
+            
+            .detail-level-group { 
+                justify-content: flex-start; 
+                flex-wrap: wrap; 
+            }
             
             /* 移动端适配表格第一列宽度 */
             .result-area table th:first-child,
@@ -157,40 +270,48 @@
 </head>
 <body>
     <div class="container">
-        <div class="header"><h1>文献分析表格生成器</h1></div>
-
-        <div class="section">
-            <div class="section-title">API配置</div>
-            <div class="config-row">
-                <div class="config-item">
-                    <label>提供商</label>
-                    <select id="providerSelect"><option value="dashscope">阿里云通义千问</option></select>
-                </div>
-                <div class="config-item">
-                    <label>模型</label>
-                    <select id="modelSelect"><option value="qwen-long">Qwen Long</option></select>
-                </div>
-                <div class="config-item">
-                    <label>API Key (可选)</label>
-                    <input type="password" id="apiKeyInput" placeholder="已内置默认Key">
-                </div>
-                <button class="test-btn" id="testBtn">测试</button>
-                <span class="status disconnected" id="connectionStatus">● 未连接</span>
-            </div>
+        <div class="header">
+            <h1>文献分析表格生成器</h1>
         </div>
 
+        <!-- 合并API配置和分析配置为一行 -->
         <div class="section">
-            <div class="section-title">分析详细程度配置</div>
-            <div class="config-row">
-                <div class="config-item">
-                    <label>选择分析详细程度</label>
-                    <div class="detail-level-group">
-                        <label><input type="radio" name="detailLevel" value="simple" checked> 简易</label>
-                        <label><input type="radio" name="detailLevel" value="medium"> 中等</label>
-                        <label><input type="radio" name="detailLevel" value="detailed"> 详细</label>
+            <div class="section-title">配置设置</div>
+            <div class="config-main-row">
+                <!-- API配置区域 -->
+                <div class="api-config">
+                    <div class="config-item">
+                        <label>提供商</label>
+                        <select id="providerSelect">
+                            <option value="dashscope">阿里云通义千问</option>
+                        </select>
+                    </div>
+                    <div class="config-item">
+                        <label>模型</label>
+                        <select id="modelSelect">
+                            <option value="qwen-long">Qwen Long</option>
+                        </select>
+                    </div>
+                    <div class="config-item">
+                        <label>API Key (可选)</label>
+                        <input type="password" id="apiKeyInput" placeholder="已内置默认Key">
+                    </div>
+                    <button class="test-btn" id="testBtn">测试</button>
+                    <span class="status disconnected" id="connectionStatus">● 未连接</span>
+                </div>
+                
+                <!-- 分析详细程度配置区域 -->
+                <div class="detail-config">
+                    <div class="config-item">
+                        <label>分析详细程度</label>
+                        <div class="detail-level-group">
+                            <label><input type="radio" name="detailLevel" value="simple" checked> 简易</label>
+                            <label><input type="radio" name="detailLevel" value="medium"> 中等</label>
+                            <label><input type="radio" name="detailLevel" value="detailed"> 详细</label>
+                        </div>
                     </div>
                     <div class="detail-description" id="detailDescription">
-                        简易模式：生成基础信息表格，包含文献的核心信息和简要摘要，适合快速浏览。
+                        简易模式：表格字段完整，但每个字段内容简洁明了，重点突出核心信息，适合快速浏览和概览。
                     </div>
                 </div>
             </div>
