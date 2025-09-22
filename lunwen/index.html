@@ -96,15 +96,7 @@
             white-space: nowrap;
         }
         
-        .detail-description {
-            font-size: 12px; 
-            color: #999; 
-            margin-top: 8px;
-            padding: 8px 12px; 
-            background: #f8f9fa; 
-            border-radius: 4px;
-            border-left: 3px solid #1890ff;
-        }
+
         
         .test-btn {
             background: #1890ff; 
@@ -310,9 +302,6 @@
                             <label><input type="radio" name="detailLevel" value="detailed"> 详细</label>
                         </div>
                     </div>
-                    <div class="detail-description" id="detailDescription">
-                        简易模式：表格字段完整，但每个字段内容简洁明了，重点突出核心信息，适合快速浏览和概览。
-                    </div>
                 </div>
             </div>
         </div>
@@ -351,7 +340,7 @@
             init() {
                 this.setupEventListeners();
                 this.updateConnectionStatus(false);
-                this.updateDetailDescription('simple');
+                // 移除了初始化时调用updateDetailDescription
             }
 
             setupEventListeners() {
@@ -379,18 +368,14 @@
 
                 detailRadios.forEach(radio => {
                     radio.addEventListener('change', (e) => {
-                        this.updateDetailDescription(e.target.value);
+                        // 移除了详细程度切换时的描述更新功能
                     });
                 });
             }
 
             updateDetailDescription(level) {
-                const descriptions = {
-                    simple: '简易模式：表格字段完整，但每个字段内容简洁明了，重点突出核心信息，适合快速浏览和概览。',
-                    medium: '中等模式：表格字段完整，每个字段内容适中详细，包含关键要点和主要分析，适合一般研究需求。',
-                    detailed: '详细模式：表格字段完整，每个字段内容全面深入，提供完整分析和详细描述，适合深度研究。'
-                };
-                document.getElementById('detailDescription').textContent = descriptions[level];
+                // 移除了详细程度的解释信息
+                document.getElementById('detailDescription').textContent = '';
             }
 
             getSelectedDetailLevel() {
