@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">支付页面 - 学生邮箱在线支付 - BuyEdu</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="安全便捷的学生邮箱在线支付，支持微信、支付宝、USDT等多种支付方式，自动发货到您的邮箱。">
+    <meta name="keywords" content="学生邮箱支付,edu邮箱付款,在线支付,微信支付,支付宝支付">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://buyedu.cn/pay.html">
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- QRCode库已不再需要，TRX和USDT现在使用外链图片 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script> -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .pay-page {
+            background-color: #f5f5f5;
+            padding: 20px 0;
+            min-height: calc(100vh - 40px);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        
+        .pay-container {
+            max-width: 1000px;
+            width: 95%;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            text-align: center;
+            overflow: hidden;
+            border: 1px solid #e5e5e5;
+            max-height: calc(100vh - 80px);
+        }
+        
+        .pay-header {
+            background: #2c5aa0;
+            color: white;
+            padding: 20px 25px;
+            position: relative;
+        }
+        
+        .pay-header h1 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .pay-header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        
+
+        
+        .pay-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            padding: 0 20px 20px;
+            height: calc(100vh - 220px);
+            max-height: 580px;
+        }
+        
+        .order-section, .payment-section {
+            background: white;
+            padding: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .payment-section {
+            overflow: visible;
+        }
+        
+        .order-section {
+            border-right: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+        }
+        
+        .order-info {
+            background: linear-gradient(135deg, #f8fcff 0%, #ffffff 100%);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+            border: 1px solid #e3f2fd;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e3f2fd;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .order-item:hover {
+            background: rgba(33, 150, 243, 0.05);
+            border-radius: 6px;
+            padding-left: 8px;
+            padding-right: 8px;
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 16px;
+            color: #1976d2;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border-radius: 8px;
+            padding: 12px 8px;
+            margin: 8px -8px -8px;
+            border: 1px solid #2196f3;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+        }
+        
+        .order-item label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .order-item span {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .payment-amount-warning {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #f57c00;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
+        }
+        
+        .payment-amount-warning h4 {
+            margin: 0 0 10px 0;
+            color: #f57c00;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        
+        .payment-amount-warning p {
+            margin: 6px 0;
+            font-size: 12px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        
+        .amount-highlight {
+            background: linear-gradient(135deg, #ff5722 0%, #f44336 100%);
+            color: white !important;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px !important;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+            margin: 0 3px;
+        }
+        
+        .payment-method-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .method-tab {
+            padding: 12px 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .method-tab:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .method-tab.active {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a6f 100%);
+            color: white;
+            border-color: #2c5aa0;
+            box-shadow: 0 2px 8px rgba(44, 90, 160, 0.3);
+        }
+        
+        .method-content {
+            display: none;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8fcff 0%, #ffffff 100%);
+            border-radius: 8px;
+            border: 1px solid #e3f2fd;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+            flex: 1;
+            overflow: visible;
+            position: relative;
+        }
+        
+        .method-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .payment-address {
+            margin-bottom: 8px;
+        }
+        
+        .address-label {
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        
+        .address-copy {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .address-copy input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .copy-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #2c5aa0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: #1e3a6f;
+        }
+        
+        .qr-code-container img {
+            max-width: 140px;
+            height: auto;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .qr-code-container p {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+        }
+        
+        /* 二维码容器相对定位 */
+        .qr-code-container {
+            text-align: center;
+            position: relative;
+            overflow: visible;
+        }
+        
+        /* 放大的二维码叠加层 */
+        .qr-enlarged {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            pointer-events: none;
+            max-width: 140px;
+            height: auto;
+        }
+        
+        .qr-enlarged.show {
+            opacity: 1;
+        }
+        
+        .payment-timer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 8px;
+            margin: 8px 0;
+            color: #856404;
+            margin-top: auto;
+        }
+        
+        .payment-timer h4 {
+            margin: 0 0 6px 0;
+            color: #e74c3c;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .payment-notice {
+            font-size: 11px;
+            color: #666;
+            text-align: left;
+        }
+        
+        .payment-notice p {
+            margin: 3px 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 20px 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(86,171,47,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .pay-page {
+                padding: 10px 0;
+            }
+            
+            .pay-container {
+                width: 95%;
+                margin: 0 auto;
+                max-width: 600px;
+            }
+            
+            .pay-header {
+                padding: 18px 20px;
+            }
+            
+            .pay-header h1 {
+                font-size: 22px;
+            }
+            
+            .pay-header p {
+                font-size: 13px;
+            }
+            
+
+            
+            .pay-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 0 15px 15px;
+                height: auto;
+                max-height: none;
+            }
+            
+            .order-section, .payment-section {
+                padding: 15px;
+                overflow-y: visible;
+            }
+            
+            .order-section {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .order-info {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .order-item {
+                font-size: 13px;
+                padding: 6px 0;
+            }
+            
+            .order-item:last-child {
+                font-size: 16px;
+                padding: 12px 6px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+                margin: 20px 20px 20px;
+            }
+            
+            .btn-secondary,
+            .btn-success {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pay-page {
+                padding: 5px 0;
+            }
+            
+            .pay-container {
+                width: 98%;
+                margin: 0 auto;
+                max-width: 500px;
+            }
+            
+            .pay-header {
+                padding: 15px 12px;
+            }
+            
+            .pay-header h1 {
+                font-size: 18px;
+            }
+            
+            .pay-header p {
+                font-size: 12px;
+            }
+            
+
+            
+            .pay-grid {
+                padding: 0 15px 15px;
+            }
+            
+            .order-section, .payment-section {
+                padding: 15px;
+            }
+            
+            .order-info {
+                padding: 12px;
+                margin: 12px 0;
+            }
+            
+            .order-item {
+                font-size: 12px;
+                padding: 5px 0;
+            }
+            
+            .order-item:last-child {
+                font-size: 15px;
+                padding: 10px 5px;
+            }
+            
+            .action-buttons {
+                margin: 15px 15px 15px;
+            }
+            
+            .btn-secondary,
+            .btn-success {
+                width: 180px;
+                font-size: 13px;
+                padding: 10px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo" onclick="goToHome()" style="cursor: pointer;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span id="siteName">BuyEdu</span>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="输入关键词进行搜索...">
+                    <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn-outline" onclick="showOnlineService()">在线客服</button>
+                    <button class="btn-primary" onclick="showConsultOrder()">咨询订单</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="pay-page">
+        <div class="pay-container">
+            <div class="pay-header">
+                <h1><i class="fas fa-credit-card"></i> 支付页面</h1>
+                <p>请完成支付以获取您的商品</p>
+            </div>
+            
+            <div class="pay-grid">
+                <!-- 左侧：订单信息 -->
+                <div class="order-section">
+                    <h3 style="color: #333; margin-bottom: 15px; font-size: 16px; font-weight: bold;">
+                        <i class="fas fa-receipt"></i> 订单信息
+                    </h3>
+                    
+                    <div class="order-info">
+                        <div class="order-item">
+                            <label>订单号：</label>
+                            <span id="displayOrderNumber" style="font-family: 'Courier New', monospace; font-size: 12px;">IJUSHDSMWPZXKOMF</span>
+                        </div>
+                        <div class="order-item">
+                            <label>商品名称：</label>
+                            <span id="displayOrderName">希雅 AAS College 学生邮箱 x 1</span>
+                        </div>
+                        <div class="order-item">
+                            <label>邮箱：</label>
+                            <span id="displayEmail">peacelucher@gmail.com</span>
+                        </div>
+                        <div class="order-item">
+                            <label>支付方式：</label>
+                            <span id="displayPaymentMethod">TRX</span>
+                        </div>
+                        <div class="order-item">
+                            <label>支付金额：</label>
+                            <span id="displayTotalPrice">¥19.80 人民币</span>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-amount-warning">
+                        <h4>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            重要提醒
+                        </h4>
+                        <p><strong>请务必确保支付金额与订单金额完全一致！</strong></p>
+                        <p>• 人民币金额：<span id="warningAmount" class="amount-highlight">¥19.80</span></p>
+                        <p id="cryptoAmountDisplay" style="display: none;">• 加密货币金额：<span id="cryptoAmount" class="amount-highlight"></span></p>
+                        <p>• 如果支付金额不一致，可能导致无法自动发货</p>
+                        <p>• 因金额不一致导致的问题，风险自理</p>
+                    </div>
+                </div>
+
+                <!-- 右侧：支付信息 -->
+                <div class="payment-section">
+                    <h3 style="color: #333; margin-bottom: 20px; font-size: 18px; font-weight: bold;">
+                        <i class="fas fa-qrcode"></i> 支付方式
+                    </h3>
+                    
+                    <div class="payment-methods">
+                        <div class="payment-method-tabs">
+                            <button class="method-tab active" onclick="switchPaymentMethod('usdt')">USDT支付</button>
+                            <button class="method-tab" onclick="switchPaymentMethod('trx')">TRX支付</button>
+                            <button class="method-tab" onclick="switchPaymentMethod('alipay')">支付宝</button>
+                            <button class="method-tab" onclick="switchPaymentMethod('wechat')">微信支付</button>
+                        </div>
+                        
+                        <div class="payment-method-content">
+                            <!-- USDT支付内容 -->
+                            <div id="usdtPayment" class="method-content active">
+                                <div class="crypto-payment-reminder" style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 6px; padding: 10px; margin-bottom: 12px;">
+                                    <h4 style="color: #1976d2; margin: 0 0 6px 0; font-size: 13px;">
+                                        <i class="fas fa-info-circle"></i> USDT支付提醒
+                                    </h4>
+                                    <p style="margin: 4px 0; color: #1565c0; font-weight: 500; font-size: 13px;">
+                                        请支付：<span id="usdtAmountReminder" style="color: #d32f2f; font-weight: bold; font-size: 15px;">计算中...</span>
+                                    </p>
+                                    <p style="margin: 4px 0; color: #666; font-size: 11px;">
+                                        ⚠️ 请务必使用TRC20网络转账！
+                                    </p>
+                                </div>
+                                <div class="payment-address">
+                                    <p class="address-label">USDT-TRC20地址：</p>
+                                    <div class="address-copy">
+                                        <input type="text" id="usdtAddressInput" readonly>
+                                        <button onclick="copyAddress('usdtAddressInput')" class="copy-btn">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="qr-code-container">
+                                    <img id="usdtQrCode" alt="USDT收款码">
+                                    <p>请使用钱包扫码支付</p>
+                                    <p style="font-size: 10px; color: #999; margin-top: 4px;">💡 鼠标悬停可放大二维码</p>
+                                </div>
+                            </div>
+                            
+                            <!-- TRX支付内容 -->
+                            <div id="trxPayment" class="method-content">
+                                <div class="crypto-payment-reminder" style="background: #fff3e0; border: 1px solid #ff9800; border-radius: 6px; padding: 10px; margin-bottom: 12px;">
+                                    <h4 style="color: #f57c00; margin: 0 0 6px 0; font-size: 13px;">
+                                        <i class="fas fa-info-circle"></i> TRX支付提醒
+                                    </h4>
+                                    <p style="margin: 4px 0; color: #ef6c00; font-weight: 500; font-size: 13px;">
+                                        请支付：<span id="trxAmountReminder" style="color: #d32f2f; font-weight: bold; font-size: 15px;">计算中...</span>
+                                    </p>
+                                    <p style="margin: 4px 0; color: #666; font-size: 11px;">
+                                        💡 TRX转账手续费极低！
+                                    </p>
+                                </div>
+                                <div class="payment-address">
+                                    <p class="address-label">TRX地址：</p>
+                                    <div class="address-copy">
+                                        <input type="text" id="trxAddressInput" readonly>
+                                        <button onclick="copyAddress('trxAddressInput')" class="copy-btn">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="qr-code-container">
+                                    <img id="trxQrCode" alt="TRX收款码">
+                                    <p>请使用钱包扫码支付</p>
+                                    <p style="font-size: 10px; color: #999; margin-top: 4px;">💡 鼠标悬停可放大二维码</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 支付宝支付内容 -->
+                            <div id="alipayPayment" class="method-content">
+                                <div class="qr-code-container">
+                                    <img id="alipayQrCode" alt="支付宝收款码">
+                                    <p>请使用支付宝扫码支付</p>
+                                    <p style="font-size: 10px; color: #999; margin-top: 4px;">💡 鼠标悬停可放大二维码</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 微信支付内容 -->
+                            <div id="wechatPayment" class="method-content">
+                                <div class="qr-code-container">
+                                    <img id="wechatQrCode" alt="微信收款码">
+                                    <p>请使用微信扫码支付</p>
+                                    <p style="font-size: 10px; color: #999; margin-top: 4px;">💡 鼠标悬停可放大二维码</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-timer">
+                        <h4>
+                            <i class="fas fa-clock"></i>
+                            支付倒计时：<span id="paymentTimer">30:00</span>
+                        </h4>
+                        <div class="payment-notice">
+                            <p>• 请在30分钟内完成支付，超时订单将自动取消</p>
+                            <p>• 支付完成后，商品将自动发货到您的邮箱</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-success" onclick="confirmPayment()">
+                    <i class="fas fa-check"></i> 我已支付
+                </button>
+                <button class="btn-secondary" onclick="showOnlineService()">
+                    <i class="fas fa-headset"></i> 联系客服
+                </button>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let config = null;
+        let paymentTimer = null;
+        let remainingTime = 1800; // 30分钟 = 1800秒
+        let cryptoRates = {}; // 存储加密货币汇率
+        
+        // 处理图片URL的HTTP/HTTPS兼容性
+        function processImageUrl(url) {
+            if (!url) return url;
+            
+            // 如果当前页面是HTTPS，确保图片URL也是HTTPS
+            if (window.location.protocol === 'https:' && url.startsWith('http://')) {
+                return url.replace('http://', 'https://');
+            }
+            
+            // 如果当前页面是HTTP，保持原样（可以是HTTP或HTTPS）
+            return url;
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadConfig();
+            updateSiteName();
+            initializePaymentPage();
+            
+            // 检查当前支付方式是否需要加载汇率
+            const orderInfo = localStorage.getItem('orderInfo');
+            let needCryptoRates = true;
+            if (orderInfo) {
+                const order = JSON.parse(orderInfo);
+                const paymentMethod = order.paymentMethod?.toLowerCase();
+                // 如果是微信或支付宝支付，不需要加载汇率
+                if (paymentMethod === 'wechat' || paymentMethod === 'alipay') {
+                    needCryptoRates = false;
+                    console.log('当前支付方式为', paymentMethod, '，跳过汇率加载');
+                }
+            }
+            
+            if (needCryptoRates) {
+                await loadCryptoRates(); // 加载加密货币汇率
+            }
+            
+            startPaymentTimer();
+            
+            // 延迟初始化二维码悬停功能
+            setTimeout(initQrCodeHover, 500);
+        });
+        
+        // 加载配置
+        async function loadConfig() {
+            try {
+                // 先尝试从localStorage加载配置
+                const savedConfig = localStorage.getItem('buyedu_config');
+                if (savedConfig) {
+                    try {
+                        config = JSON.parse(savedConfig);
+                        console.log('从localStorage加载配置成功:', config);
+                    } catch (e) {
+                        console.error('解析localStorage配置失败:', e);
+                        // 如果解析失败，尝试从文件加载
+                        const response = await fetch('data/config.json');
+                        config = await response.json();
+                    }
+                } else {
+                    // 如果localStorage没有配置，从文件加载
+                    const response = await fetch('data/config.json');
+                    config = await response.json();
+                }
+                
+                // 设置USDT地址和二维码
+                if (config.usdtQrCode) {
+                    // 优先使用外链二维码图片，处理HTTP/HTTPS兼容性
+                    const usdtImg = document.getElementById('usdtQrCode');
+                    const processedUrl = processImageUrl(config.usdtQrCode);
+                    usdtImg.src = processedUrl;
+                    usdtImg.onerror = function() {
+                        console.error('USDT二维码加载失败:', processedUrl);
+                        // 如果HTTPS失败，尝试HTTP（仅在HTTP环境下）
+                        if (processedUrl.startsWith('https://') && window.location.protocol === 'http:') {
+                            const httpUrl = processedUrl.replace('https://', 'http://');
+                            console.log('尝试HTTP版本:', httpUrl);
+                            this.src = httpUrl;
+                            this.onerror = function() {
+                                console.error('HTTP版本也失败:', httpUrl);
+                                this.style.display = 'none';
+                                this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                            };
+                        } else {
+                            this.style.display = 'none';
+                            this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                        }
+                    };
+                    console.log('USDT二维码URL:', processedUrl);
+                }
+                
+                // 设置USDT地址
+                if (config.usdtAddress) {
+                    document.getElementById('usdtAddressInput').value = config.usdtAddress;
+                    console.log('USDT地址:', config.usdtAddress);
+                }
+                
+                // 设置TRX地址和二维码
+                if (config.trxQrCode) {
+                    // 优先使用外链二维码图片，处理HTTP/HTTPS兼容性
+                    const trxImg = document.getElementById('trxQrCode');
+                    const processedUrl = processImageUrl(config.trxQrCode);
+                    trxImg.src = processedUrl;
+                    trxImg.onerror = function() {
+                        console.error('TRX二维码加载失败:', processedUrl);
+                        // 如果HTTPS失败，尝试HTTP（仅在HTTP环境下）
+                        if (processedUrl.startsWith('https://') && window.location.protocol === 'http:') {
+                            const httpUrl = processedUrl.replace('https://', 'http://');
+                            console.log('尝试HTTP版本:', httpUrl);
+                            this.src = httpUrl;
+                            this.onerror = function() {
+                                console.error('HTTP版本也失败:', httpUrl);
+                                this.style.display = 'none';
+                                this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                            };
+                        } else {
+                            this.style.display = 'none';
+                            this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                        }
+                    };
+                    console.log('TRX二维码URL:', processedUrl);
+                } else if (config.usdtQrCode) {
+                    // 如果没有单独的TRX二维码，使用USDT二维码
+                    const trxImg = document.getElementById('trxQrCode');
+                    const processedUrl = processImageUrl(config.usdtQrCode);
+                    trxImg.src = processedUrl;
+                    trxImg.onerror = function() {
+                        console.error('TRX使用USDT二维码加载失败:', processedUrl);
+                        // 如果HTTPS失败，尝试HTTP（仅在HTTP环境下）
+                        if (processedUrl.startsWith('https://') && window.location.protocol === 'http:') {
+                            const httpUrl = processedUrl.replace('https://', 'http://');
+                            console.log('尝试HTTP版本:', httpUrl);
+                            this.src = httpUrl;
+                            this.onerror = function() {
+                                console.error('HTTP版本也失败:', httpUrl);
+                                this.style.display = 'none';
+                                this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                            };
+                        } else {
+                            this.style.display = 'none';
+                            this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                        }
+                    };
+                    console.log('TRX使用USDT二维码URL:', processedUrl);
+                }
+                
+                // 设置TRX地址
+                if (config.trxAddress) {
+                    document.getElementById('trxAddressInput').value = config.trxAddress;
+                    console.log('TRX地址:', config.trxAddress);
+                } else if (config.usdtAddress) {
+                    // 如果没有单独的TRX地址，使用USDT地址
+                    document.getElementById('trxAddressInput').value = config.usdtAddress;
+                    console.log('TRX使用USDT地址:', config.usdtAddress);
+                }
+                
+                // 设置支付宝和微信收款码
+                if (config.alipayQrCode) {
+                    const alipayImg = document.getElementById('alipayQrCode');
+                    const processedUrl = processImageUrl(config.alipayQrCode);
+                    alipayImg.src = processedUrl;
+                    alipayImg.onerror = function() {
+                        console.error('支付宝二维码加载失败:', processedUrl);
+                        // 如果HTTPS失败，尝试HTTP（仅在HTTP环境下）
+                        if (processedUrl.startsWith('https://') && window.location.protocol === 'http:') {
+                            const httpUrl = processedUrl.replace('https://', 'http://');
+                            console.log('尝试HTTP版本:', httpUrl);
+                            this.src = httpUrl;
+                            this.onerror = function() {
+                                console.error('HTTP版本也失败:', httpUrl);
+                                this.style.display = 'none';
+                                this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                            };
+                        } else {
+                            this.style.display = 'none';
+                            this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                        }
+                    };
+                    console.log('支付宝二维码URL:', processedUrl);
+                }
+                // 修复微信字段名不匹配问题
+                if (config.wechatPayQrCode) {
+                    const wechatImg = document.getElementById('wechatQrCode');
+                    const processedUrl = processImageUrl(config.wechatPayQrCode);
+                    wechatImg.src = processedUrl;
+                    wechatImg.onerror = function() {
+                        console.error('微信二维码加载失败:', processedUrl);
+                        // 如果HTTPS失败，尝试HTTP（仅在HTTP环境下）
+                        if (processedUrl.startsWith('https://') && window.location.protocol === 'http:') {
+                            const httpUrl = processedUrl.replace('https://', 'http://');
+                            console.log('尝试HTTP版本:', httpUrl);
+                            this.src = httpUrl;
+                            this.onerror = function() {
+                                console.error('HTTP版本也失败:', httpUrl);
+                                this.style.display = 'none';
+                                this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                            };
+                        } else {
+                            this.style.display = 'none';
+                            this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                        }
+                    };
+                    console.log('微信二维码URL:', processedUrl);
+                } else if (config.wechatQrCode) {
+                    // 向后兼容：如果使用的是旧的字段名
+                    const wechatImg = document.getElementById('wechatQrCode');
+                    const processedUrl = processImageUrl(config.wechatQrCode);
+                    wechatImg.src = processedUrl;
+                    wechatImg.onerror = function() {
+                        console.error('微信二维码加载失败:', processedUrl);
+                        // 如果HTTPS失败，尝试HTTP（仅在HTTP环境下）
+                        if (processedUrl.startsWith('https://') && window.location.protocol === 'http:') {
+                            const httpUrl = processedUrl.replace('https://', 'http://');
+                            console.log('尝试HTTP版本:', httpUrl);
+                            this.src = httpUrl;
+                            this.onerror = function() {
+                                console.error('HTTP版本也失败:', httpUrl);
+                                this.style.display = 'none';
+                                this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                            };
+                        } else {
+                            this.style.display = 'none';
+                            this.parentNode.innerHTML += '<p style="color: red;">二维码加载失败</p>';
+                        }
+                    };
+                    console.log('微信二维码URL(旧字段):', processedUrl);
+                }
+                
+                console.log('配置加载完成:', config);
+                console.log('支付方式:', config.paymentMethods);
+                
+                // 调试信息：检查二维码配置
+                console.log('=== 二维码配置检查 ===');
+                console.log('支付宝二维码:', config.alipayQrCode || '未配置');
+                console.log('微信二维码(wechatPayQrCode):', config.wechatPayQrCode || '未配置');
+                console.log('微信二维码(wechatQrCode):', config.wechatQrCode || '未配置');
+                console.log('USDT地址:', config.usdtAddress || '未配置');
+                console.log('USDT二维码:', config.usdtQrCode || '未配置');
+                console.log('TRX地址:', config.trxAddress || '未配置');
+                console.log('TRX二维码:', config.trxQrCode || '未配置');
+                console.log('========================');
+            } catch (error) {
+                console.error('加载配置失败:', error);
+            }
+        }
+        
+        // 获取加密货币汇率
+        async function loadCryptoRates() {
+            try {
+                console.log('正在获取加密货币汇率...');
+                
+                // 首先尝试多个API源
+                const apiSources = [
+                    {
+                        url: 'https://api.coingecko.com/api/v3/simple/price?ids=tron,tether&vs_currencies=cny',
+                        parser: (data) => ({
+                            trx: data.tron?.cny,
+                            usdt: data.tether?.cny
+                        })
+                    },
+                    // 备用API源1 - 使用CORS代理
+                    {
+                        url: 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=tron,tether&vs_currencies=cny'),
+                        parser: (data) => {
+                            const contents = JSON.parse(data.contents);
+                            return {
+                                trx: contents.tron?.cny,
+                                usdt: contents.tether?.cny
+                            };
+                        }
+                    }
+                ];
+                
+                let success = false;
+                
+                // 尝试每个API源
+                for (let i = 0; i < apiSources.length && !success; i++) {
+                    try {
+                        console.log(`尝试API源 ${i + 1}:`, apiSources[i].url);
+                        
+                        const response = await fetch(apiSources[i].url, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                            },
+                            // 设置超时
+                            signal: AbortSignal.timeout(10000)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        
+                        const data = await response.json();
+                        const rates = apiSources[i].parser(data);
+                        
+                        if (rates.trx && rates.usdt && rates.trx > 0 && rates.usdt > 0) {
+                            cryptoRates.trx = rates.trx; // TRX对人民币汇率
+                            cryptoRates.usdt = rates.usdt; // USDT对人民币汇率
+                            
+                            console.log('加密货币汇率获取成功:', cryptoRates);
+                            
+                            // 更新显示的加密货币金额
+                            updateCryptoAmountDisplay();
+                            success = true;
+                        } else {
+                            throw new Error('汇率数据格式错误或数值无效');
+                        }
+                    } catch (apiError) {
+                        console.warn(`API源 ${i + 1} 失败:`, apiError.message);
+                        if (i === apiSources.length - 1) {
+                            throw apiError;
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                console.error('所有汇率API源都失败:', error);
+                
+                // 使用备用汇率（手动设置的大概值）
+                cryptoRates.trx = 0.62; // 1 TRX ≈ 0.62 CNY (备用值)
+                cryptoRates.usdt = 7.25; // 1 USDT ≈ 7.25 CNY (备用值)
+                
+                console.log('使用备用汇率:', cryptoRates);
+                updateCryptoAmountDisplay();
+                
+                // 显示警告信息
+                showRateWarning();
+            }
+        }
+        
+        // 显示汇率获取失败警告
+        function showRateWarning() {
+            const warningDiv = document.createElement('div');
+            warningDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ffc107;
+                color: #856404;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 300px;
+                font-size: 14px;
+                border: 1px solid #ffeaa7;
+            `;
+            warningDiv.innerHTML = `
+                <strong><i class="fas fa-exclamation-triangle"></i> 汇率提醒</strong><br>
+                无法获取实时汇率，正在使用备用汇率。请确认支付金额后再进行转账。
+            `;
+            
+            document.body.appendChild(warningDiv);
+            
+            setTimeout(() => {
+                if (document.body.contains(warningDiv)) {
+                    document.body.removeChild(warningDiv);
+                }
+            }, 8000);
+        }
+        
+        // 更新加密货币金额显示
+        function updateCryptoAmountDisplay() {
+            const orderInfo = localStorage.getItem('orderInfo');
+            if (!orderInfo) return;
+            
+            const order = JSON.parse(orderInfo);
+            const cnyAmount = order.totalPrice; // 人民币金额
+            const paymentMethod = order.paymentMethod?.toLowerCase();
+            
+            // 更新TRX金额显示（保留2位小数）
+            if (cryptoRates.trx) {
+                const trxAmount = (cnyAmount / cryptoRates.trx).toFixed(2);
+                const trxReminderElement = document.getElementById('trxAmountReminder');
+                if (trxReminderElement) {
+                    trxReminderElement.textContent = `${trxAmount} TRX`;
+                }
+            }
+            
+            // 更新USDT金额显示（保留2位小数）
+            if (cryptoRates.usdt) {
+                const usdtAmount = (cnyAmount / cryptoRates.usdt).toFixed(2);
+                const usdtReminderElement = document.getElementById('usdtAmountReminder');
+                if (usdtReminderElement) {
+                    usdtReminderElement.textContent = `${usdtAmount} USDT`;
+                }
+            }
+            
+            // 根据当前选择的支付方式显示对应的加密货币金额
+            if (paymentMethod === 'trx' || paymentMethod === 'usdt') {
+                const rate = cryptoRates[paymentMethod];
+                if (rate) {
+                    const cryptoAmount = (cnyAmount / rate).toFixed(2);
+                    const cryptoCurrency = paymentMethod.toUpperCase();
+                    
+                    // 显示加密货币金额
+                    document.getElementById('cryptoAmount').textContent = `${cryptoAmount} ${cryptoCurrency}`;
+                    document.getElementById('cryptoAmountDisplay').style.display = 'block';
+                    
+                    console.log(`¥${cnyAmount} 人民币 = ${cryptoAmount} ${cryptoCurrency} (汇率: 1 ${cryptoCurrency} = ¥${rate} CNY)`);
+                }
+            } else {
+                // 隐藏加密货币金额显示
+                document.getElementById('cryptoAmountDisplay').style.display = 'none';
+            }
+        }
+        
+        // 生成二维码函数已移除，现在TRX和USDT使用外链图片
+        // function generateQRCode(elementId, text) { ... }
+        
+        // 更新网站名称
+        function updateSiteName() {
+            if (config) {
+                const siteName = config.siteName || 'BuyEdu';
+                const siteDescription = config.siteDescription || '专业的学生邮箱和数字产品销售平台';
+                
+                // 更新页面标题
+                const pageTitle = document.getElementById('pageTitle');
+                if (pageTitle) {
+                    pageTitle.textContent = `支付页面 - ${siteName}`;
+                }
+                
+                // 更新导航栏中的网站名称
+                const siteNameElement = document.getElementById('siteName');
+                if (siteNameElement) {
+                    siteNameElement.textContent = siteName;
+                }
+            }
+        }
+        
+        // 初始化支付页面
+        function initializePaymentPage() {
+            const orderInfo = localStorage.getItem('orderInfo');
+            if (orderInfo) {
+                const order = JSON.parse(orderInfo);
+                
+                // 更新页面显示的订单信息
+                document.getElementById('displayOrderNumber').textContent = order.orderNumber || 'IJUSHDSMWPZXKOMF';
+                document.getElementById('displayOrderName').textContent = `${order.product} x ${order.quantity}`;
+                document.getElementById('displayTotalPrice').textContent = `¥${order.totalPrice.toFixed(2)} 人民币`;
+                document.getElementById('displayEmail').textContent = order.email;
+                document.getElementById('displayPaymentMethod').textContent = order.paymentMethod || 'TRX';
+                
+                // 更新警告中的金额
+                document.getElementById('warningAmount').textContent = `¥${order.totalPrice.toFixed(2)}`;
+                
+                // 根据支付方式自动切换到对应的支付选项
+                const paymentMethod = order.paymentMethod?.toLowerCase() || 'usdt';
+                switchPaymentMethod(paymentMethod);
+            }
+            
+            // 显示可用的付款方式
+            if (config.paymentMethods) {
+                // 提取启用的支付方式代码
+                const enabledMethods = config.paymentMethods
+                    .filter(method => method.enabled)
+                    .map(method => {
+                        const nameToCode = {
+                            '支付宝': 'alipay',
+                            '微信支付': 'wechat',
+                            '微信': 'wechat',
+                            'USDT': 'usdt',
+                            'TRX': 'trx'
+                        };
+                        return nameToCode[method.name] || method.name.toLowerCase();
+                    });
+                
+                document.querySelectorAll('.method-tab').forEach(tab => {
+                    if (!enabledMethods.includes(tab.value)) {
+                        tab.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        // 切换支付方式
+        async function switchPaymentMethod(method) {
+            // 更新标签状态
+            document.querySelectorAll('.method-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchPaymentMethod('${method}')"]`).classList.add('active');
+            
+            // 更新内容显示
+            document.querySelectorAll('.method-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${method}Payment`).classList.add('active');
+            
+            // 更新订单信息中的支付方式
+            const orderInfo = localStorage.getItem('orderInfo');
+            if (orderInfo) {
+                const order = JSON.parse(orderInfo);
+                order.paymentMethod = method.toUpperCase();
+                localStorage.setItem('orderInfo', JSON.stringify(order));
+                
+                // 更新页面显示的支付方式
+                document.getElementById('displayPaymentMethod').textContent = method.toUpperCase();
+                
+                // 检查是否需要加载或更新汇率
+                const needsCryptoRates = method === 'trx' || method === 'usdt';
+                const hasValidRates = cryptoRates.trx && cryptoRates.usdt;
+                
+                if (needsCryptoRates && !hasValidRates) {
+                    console.log('切换到加密货币支付方式，需要加载汇率');
+                    await loadCryptoRates();
+                } else if (needsCryptoRates) {
+                    console.log('切换到加密货币支付方式，使用现有汇率');
+                    // 更新加密货币金额显示
+                    updateCryptoAmountDisplay();
+                } else {
+                    console.log('切换到传统支付方式，无需汇率');
+                    // 隐藏加密货币金额显示
+                    document.getElementById('cryptoAmountDisplay').style.display = 'none';
+                }
+            }
+        }
+        
+        // 复制地址
+        function copyAddress(inputId) {
+            const input = document.getElementById(inputId);
+            input.select();
+            document.execCommand('copy');
+            
+            // 显示复制成功提示
+            const copyBtn = input.nextElementSibling;
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+        }
+        
+        // 开始支付倒计时
+        function startPaymentTimer() {
+            const timerDisplay = document.getElementById('paymentTimer');
+            
+            function updateTimer() {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(paymentTimer);
+                    handlePaymentTimeout();
+                } else {
+                    remainingTime--;
+                }
+            }
+            
+            updateTimer();
+            paymentTimer = setInterval(updateTimer, 1000);
+        }
+        
+        // 处理支付超时
+        function handlePaymentTimeout() {
+            alert('支付已超时，订单已自动取消');
+            window.location.href = 'index.html';
+        }
+        
+        // 确认支付
+        function confirmPayment() {
+            clearInterval(paymentTimer);
+            
+            // 这里可以添加实际的支付验证逻辑
+            
+            // 显示支付成功提示
+            alert('感谢您的支付！我们会尽快处理您的订单。');
+            
+            // 跳转到订单页面或首页
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+        
+        // 二维码悬停放大功能
+        function initQrCodeHover() {
+            // 获取所有二维码容器
+            const qrContainers = document.querySelectorAll('.qr-code-container');
+            
+            qrContainers.forEach(container => {
+                const originalImg = container.querySelector('img');
+                if (!originalImg) return;
+                
+                // 创建放大的二维码图片
+                const enlargedImg = document.createElement('img');
+                enlargedImg.src = originalImg.src;
+                enlargedImg.alt = originalImg.alt;
+                enlargedImg.className = 'qr-enlarged';
+                
+                // 将放大的图片添加到容器中
+                container.appendChild(enlargedImg);
+                
+                // 只监听原始图片的鼠标事件
+                originalImg.addEventListener('mouseenter', function() {
+                    enlargedImg.classList.add('show');
+                });
+                
+                originalImg.addEventListener('mouseleave', function() {
+                    enlargedImg.classList.remove('show');
+                });
+            });
+        }
+        
+
+        
+        // 导航栏功能函数
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            if (searchTerm) {
+                window.location.href = `index.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        function showOnlineService() {
+            // 跳转到 Telegram 联系客服
+            window.open('https://t.me/buymailbot1', '_blank');
+        }
+
+        function showConsultOrder() {
+            // 跳转到咨询订单页面
+            window.location.href = 'order-inquiry.html';
+        }
+
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <script src="js/script-loader.js"></script>
+    <script src="js/analytics-loader.js"></script>
+</body>
+</html>

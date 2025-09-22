@@ -1,0 +1,316 @@
+.ip-card {
+  background: rgba(255,255,255,0.98);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(59,183,143,0.18), 0 1.5px 8px rgba(59,183,143,0.08);
+  max-width: 480px;
+  margin: 3.5rem auto 2rem auto;
+  padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.18s;
+}
+.ip-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -60px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, #3bb78f33 0%, transparent 80%);
+  z-index: 0;
+}
+.ip-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, #0bab6440 0%, transparent 80%);
+  z-index: 0;
+}
+.ip-title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #0bab64;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1.5px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ip-main-info {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  z-index: 1;
+}
+.ip-label {
+  color: #888;
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+.ip-value {
+  color: #3bb78f;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 8px #3bb78f22;
+  transition: color 0.2s;
+}
+.ip-isp {
+  color: #0bab64;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  white-space: pre-line;
+}
+.ip-location, .ip-coord {
+  color: #555;
+  font-size: 1.05rem;
+  text-align: center;
+  z-index: 1;
+  word-break: break-all;
+}
+.ip-input-area {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  z-index: 1;
+}
+#ip-input {
+  flex: 1;
+  padding: 0.7rem 1.1rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  outline: none;
+  background: #f8fdfb;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px #3bb78f11;
+}
+#ip-input:focus {
+  border: 1.5px solid #3bb78f;
+  box-shadow: 0 2px 8px #3bb78f22;
+}
+#ip-query-btn {
+  background: linear-gradient(90deg, #3bb78f 0%, #0bab64 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 0 1.3rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 4px #0bab6411;
+  transition: background 0.2s, transform 0.15s;
+  outline: none;
+}
+#ip-query-btn:hover, #ip-query-btn:focus {
+  background: linear-gradient(90deg, #0bab64 0%, #3bb78f 100%);
+  transform: translateY(-2px) scale(1.04);
+}
+.ip-desc {
+  color: #888;
+  font-size: 0.98rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  z-index: 1;
+}
+.ip-card.simple {
+  background: rgba(255,255,255,0.82);
+  border-radius: 26px;
+  box-shadow: 0 8px 32px rgba(59,183,143,0.18), 0 1.5px 8px rgba(59,183,143,0.08);
+  max-width: 400px;
+  margin: 3.5rem auto 2rem auto;
+  padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #e6f7f1;
+  background-image: linear-gradient(135deg, #f3fdfa 60%, #e6f7f1 100%);
+}
+.ip-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0bab64;
+  margin-bottom: 0.2rem;
+  letter-spacing: 1px;
+  gap: 0.4rem;
+}
+.ip-icon {
+  font-size: 1.4rem;
+  margin-right: 0.2rem;
+}
+.ip-main-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+.ip-label {
+  color: #888;
+  font-size: 1rem;
+  font-weight: 400;
+}
+.ip-value {
+  color: #1bbd7e;
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 12px #3bb78f22;
+  margin: 0 0.2em;
+}
+.ip-isp {
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+  text-align: center;
+}
+.ip-isp .ip-badge {
+  font-size: 1.01rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, #e0f9f0 60%, #c6f7e2 100%);
+  color: #0bab64;
+  border: 1.2px solid #3bb78f33;
+  box-shadow: 0 1px 6px #3bb78f11;
+}
+.ip-brief-info {
+  color: #666;
+  font-size: 0.98rem;
+  text-align: center;
+  line-height: 1.6;
+  word-break: break-all;
+}
+.ip-input-area {
+  display: flex;
+  gap: 0.4rem;
+  width: 100%;
+  justify-content: center;
+}
+#ip-input {
+  flex: 1;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  background: #f8fdfb;
+  transition: border 0.2s;
+}
+#ip-input:focus {
+  border: 1.5px solid #3bb78f;
+}
+#ip-query-btn {
+  background: linear-gradient(90deg, #3bb78f 0%, #0bab64 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#ip-query-btn:hover {
+  background: linear-gradient(90deg, #0bab64 0%, #3bb78f 100%);
+}
+.ip-desc {
+  color: #aaa;
+  font-size: 0.92rem;
+  margin-top: 0.2rem;
+  text-align: center;
+}
+.ip-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
+  justify-content: center;
+  margin-bottom: 0.2rem;
+  position: relative;
+}
+.ip-badge-group + .ip-badge-group {
+  margin-top: 0.7rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid #e6f7f1;
+}
+.ip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.22em 1.1em 0.22em 0.7em;
+  font-size: 1.01rem;
+  font-weight: 500;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f3fdfa 60%, #e6f7f1 100%);
+  color: #0bab64;
+  border: 1.2px solid #3bb78f22;
+  box-shadow: 0 2px 8px #3bb78f11;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
+  cursor: default;
+  position: relative;
+}
+.ip-badge .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e0f9f0 60%, #c6f7e2 100%);
+  color: #0bab64;
+  font-size: 1.1em;
+  margin-right: 0.18em;
+  opacity: 0.92;
+  box-shadow: 0 1px 4px #3bb78f11;
+}
+.ip-badge:hover {
+  background: linear-gradient(90deg, #e6f7f1 60%, #f3fdfa 100%);
+  color: #1bbd7e;
+  box-shadow: 0 4px 16px #3bb78f22;
+  transform: translateY(-2px) scale(1.04);
+}
+.ip-badge-secondary {
+  background: #f6f6f6;
+  color: #888;
+  border: 1.2px solid #e0e0e0;
+  box-shadow: none;
+}
+@media (max-width: 600px) {
+  .ip-card {
+    max-width: 98vw;
+    padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+    gap: 1rem;
+  }
+  .ip-title { font-size: 1.15rem; }
+  .ip-main-info { font-size: 1.05rem; }
+  .ip-value { font-size: 1.15rem; }
+}
+@media (max-width: 600px) {
+  .ip-card.simple {
+    max-width: 98vw;
+    padding: 1.2rem 0.3rem 0.8rem 0.3rem;
+    gap: 0.9rem;
+  }
+  .ip-title { font-size: 1.05rem; }
+  .ip-main-info { font-size: 0.98rem; }
+  .ip-value { font-size: 1.25rem; }
+  .ip-brief-info { font-size: 0.92rem; }
+}
+@media (max-width: 600px) {
+  .ip-badge { font-size: 0.92rem; padding: 0.13em 0.7em 0.13em 0.5em; }
+  .ip-badge-group { gap: 0.3rem 0.4rem; }
+}

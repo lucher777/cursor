@@ -1,0 +1,62 @@
+{
+  "siteName": "BuyEdu",
+  "siteDescription": "专业的学生邮箱和数字产品销售平台",
+  "adminPassword": "liu1089142446",
+  "currency": "¥",
+  "categories": [
+    "优惠",
+    "腾讯",
+    "论客",
+    "网易",
+    "无限别名"
+  ],
+  "contactInfo": {
+    "email": "peacelucher@gmail.com",
+    "qq": "780432557"
+  },
+  "buyRedirectUrl": "",
+  "usdtAddress": "TLTCBSaZKaAkd5SbMTHWAnydS5ddiZsEMa",
+  "trxAddress": "TLTCBSaZKaAkd5SbMTHWAnydS5ddiZsEMa",
+  "alipayQrCode": "http://img.panpans.cn/zfb.png",
+  "wechatPayQrCode": "http://img.panpans.cn/wx.png",
+  "trxQrCode": "http://img.panpans.cn/trx.png",
+  "usdtQrCode": "http://img.panpans.cn/usdt.png",
+  "paymentMethods": [
+    {
+      "name": "支付宝",
+      "enabled": true
+    },
+    {
+      "name": "微信支付",
+      "enabled": true
+    },
+    {
+      "name": "USDT",
+      "enabled": true
+    },
+    {
+      "name": "TRX",
+      "enabled": true
+    }
+  ],
+  "announcement": "欢迎光临！我们提供专业的学生邮箱和各类数字产品。",
+  "customCss": "",
+  "customJs": "",
+  "wechatQrCode": "http://img.panpans.cn/wx.png",
+  "analytics": {
+    "enabled": false,
+    "scripts": [
+      {
+        "id": "script_1754030649576",
+        "name": "51La",
+        "type": "custom",
+        "position": "head",
+        "code": "<script charset=\"UTF-8\" id=\"LA_COLLECT\" src=\"//sdk.51.la/js-sdk-pro.min.js\"></script>\n<script>LA.init({id:\"JxAeuQFzxYfakaad\",ck:\"JxAeuQFzxYfakaad\"})</script>",
+        "enabled": true,
+        "createTime": 1754030649576
+      }
+    ]
+  },
+  "exportTime": "2025-08-01T06:44:16.932Z",
+  "version": "1.0"
+}

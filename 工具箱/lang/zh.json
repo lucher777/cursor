@@ -1,0 +1,23 @@
+{
+  "tool_ip": "IP地址查询",
+  "tool_calculator": "计算器",
+  "tool_unit": "单位换算",
+  "unit_input_placeholder": "请输入数值",
+  "unit_desc": "支持长度、重量、温度等常用单位的换算。",
+  "tool_time": "时间工具",
+  "time_title": "当前时间",
+  "time_desc": "实时显示本地时间、日期、公历周次及农历信息。",
+  "tool_convert": "简繁体转换",
+  "convert_title": "简繁体转换",
+  "convert_input_placeholder": "请输入文本",
+  "btn_to_trad": "转为繁体",
+  "btn_to_simp": "转为简体",
+  "convert_output_placeholder": "输出",
+  "convert_desc": "支持简体与繁体中文的相互转换。",
+  "ip_title": "IP地址查询",
+  "ip_input_placeholder": "请输入IP地址",
+  "ip_query_btn": "查询",
+  "ip_desc": "可查询本机或任意IP的归属地、运营商、经纬度等信息。",
+  "ip_coord": "经纬度",
+  "footer": "©2024 工具箱 | 保留所有权利"
+} 

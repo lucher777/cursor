@@ -1,0 +1,23 @@
+{
+  "tool_ip": "IP Lookup",
+  "tool_calculator": "Calculator",
+  "tool_unit": "Unit Converter",
+  "unit_input_placeholder": "Enter value",
+  "unit_desc": "Supports conversion of common units such as length, weight, and temperature.",
+  "tool_time": "Time Tools",
+  "time_title": "Current Time",
+  "time_desc": "Display local time, date, ISO week and Chinese lunar calendar.",
+  "tool_convert": "Simp-Trad Converter",
+  "convert_title": "Simplified & Traditional Converter",
+  "convert_input_placeholder": "Enter text",
+  "btn_to_trad": "To Traditional",
+  "btn_to_simp": "To Simplified",
+  "convert_output_placeholder": "Output",
+  "convert_desc": "Convert between Simplified and Traditional Chinese.",
+  "ip_title": "IP Lookup",
+  "ip_input_placeholder": "Enter IP address",
+  "ip_query_btn": "Query",
+  "ip_desc": "Query the location, ISP, and coordinates of your own or any IP address.",
+  "ip_coord": "Coordinates",
+  "footer": "©2024 Toolbox | All rights reserved."
+} 

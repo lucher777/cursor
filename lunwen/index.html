@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文献分析表格生成器</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5; min-height: 100vh; padding: 20px;
+        }
+        .container {
+            max-width: 1200px; margin: 0 auto; background: white;
+            border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: white; padding: 30px; text-align: center; border-bottom: 1px solid #e8e8e8;
+        }
+        .header h1 { font-size: 28px; font-weight: 500; color: #333; }
+        .section {
+            padding: 24px 30px; border-bottom: 1px solid #e8e8e8;
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title { font-size: 16px; font-weight: 500; color: #333; margin-bottom: 16px; }
+        .config-row { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
+        .config-item { display: flex; flex-direction: column; gap: 4px; }
+        .config-item label { font-size: 14px; color: #666; }
+        .config-item select, .config-item input {
+            padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;
+            font-size: 14px; min-width: 120px;
+        }
+        .config-item input { min-width: 200px; }
+        .detail-level-group {
+            display: flex; gap: 8px; align-items: center;
+        }
+        .detail-level-group input[type="radio"] {
+            min-width: auto; margin: 0 4px 0 0;
+        }
+        .detail-level-group label {
+            font-size: 14px; color: #333; margin-bottom: 0; cursor: pointer;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .detail-description {
+            font-size: 12px; color: #999; margin-top: 8px;
+            padding: 8px 12px; background: #f8f9fa; border-radius: 4px;
+            border-left: 3px solid #1890ff;
+        }
+        .test-btn {
+            background: #1890ff; color: white; border: none; padding: 8px 16px;
+            border-radius: 4px; cursor: pointer; font-size: 14px; margin-left: 8px;
+        }
+        .test-btn:hover { background: #40a9ff; }
+        .status { margin-left: 8px; font-size: 14px; }
+        .status.connected { color: #52c41a; }
+        .status.disconnected { color: #ff4d4f; }
+        .upload-area {
+            border: 2px dashed #d9d9d9; border-radius: 6px; padding: 40px; text-align: center;
+            background: #fafafa; transition: all 0.3s; cursor: pointer;
+        }
+        .upload-area:hover { border-color: #1890ff; background: #f0f8ff; }
+        .upload-area.dragover { border-color: #1890ff; background: #e6f7ff; }
+        .upload-text { color: #666; margin-bottom: 8px; }
+        .upload-hint { color: #999; font-size: 12px; }
+        .file-input { display: none; }
+        .file-list { margin-top: 16px; }
+        .file-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: #f9f9f9; border-radius: 4px; margin-bottom: 8px;
+        }
+        .file-info { display: flex; align-items: center; gap: 8px; }
+        .file-name { font-weight: 500; color: #333; }
+        .file-size { color: #999; font-size: 12px; }
+        .remove-btn {
+            background: #ff4d4f; color: white; border: none; padding: 4px 8px;
+            border-radius: 4px; cursor: pointer; font-size: 12px;
+        }
+        .action-btn {
+            background: #52c41a; color: white; border: none; padding: 12px 24px;
+            border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 16px;
+        }
+        .action-btn:hover { background: #73d13d; }
+        .action-btn:disabled { background: #d9d9d9; cursor: not-allowed; }
+        .result-area {
+            background: #fafafa; border: 1px solid #e8e8e8; border-radius: 4px; padding: 16px;
+            min-height: 400px; white-space: pre-wrap; line-height: 1.6; color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif; overflow-x: auto;
+        }
+        .loading { text-align: center; padding: 20px; color: #666; }
+        .loading-spinner {
+            width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #1890ff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result-area table { width: 100%; border-collapse: collapse; margin: 10px 0 20px 0; font-size: 14px; background-color: white; }
+        .result-area th, .result-area td { 
+            border: 1px solid #ddd; padding: 8px 12px; text-align: left; vertical-align: top; 
+            word-wrap: break-word; white-space: pre-wrap; line-height: 1.4;
+        }
+        .result-area th { background-color: #f8f9fa; font-weight: 600; color: #333; text-align: center; white-space: nowrap; }
+        .result-area tr:nth-child(even) { background-color: #f9f9f9; }
+        
+        /* 调整简易表格第一列（序号列）宽度 */
+        .result-area table th:first-child,
+        .result-area table td:first-child { 
+            width: 100px; 
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        /* 调整详细表格第一列（字段名列）宽度 */
+        .result-area .detailed-table th:first-child,
+        .result-area .detailed-table td:first-child { 
+            width: 100px; 
+            min-width: 100px;
+            background-color: #e8f4fd; 
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .result-area .detailed-table td { min-height: 40px; line-height: 1.4; }
+        .result-area h3 { 
+            font-size: 16px; font-weight: 600; margin: 20px 0 10px 0; color: #333;
+            border-bottom: 2px solid #1890ff; padding-bottom: 5px; clear: both;
+        }
+        .result-area h3:first-child { margin-top: 0; }
+        .result-area table + h3 { margin-top: 30px; }
+        .toggle-btn {
+            background: #1890ff; color: white; border: none; padding: 8px 16px;
+            border-radius: 4px; cursor: pointer; font-size: 14px; margin: 10px 0;
+        }
+        .toggle-btn:hover { background: #40a9ff; }
+        @media (max-width: 768px) {
+            .config-row { flex-direction: column; align-items: stretch; }
+            .config-item, .config-item select, .config-item input { width: 100%; min-width: auto; }
+            .detail-level-group { justify-content: flex-start; flex-wrap: wrap; }
+            
+            /* 移动端适配表格第一列宽度 */
+            .result-area table th:first-child,
+            .result-area table td:first-child { 
+                width: 60px; 
+                min-width: 60px;
+            }
+            
+            /* 移动端详细表格第一列宽度保持更大 */
+            .result-area .detailed-table th:first-child,
+            .result-area .detailed-table td:first-child { 
+                width: 120px; 
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header"><h1>文献分析表格生成器</h1></div>
+
+        <div class="section">
+            <div class="section-title">API配置</div>
+            <div class="config-row">
+                <div class="config-item">
+                    <label>提供商</label>
+                    <select id="providerSelect"><option value="dashscope">阿里云通义千问</option></select>
+                </div>
+                <div class="config-item">
+                    <label>模型</label>
+                    <select id="modelSelect"><option value="qwen-long">Qwen Long</option></select>
+                </div>
+                <div class="config-item">
+                    <label>API Key (可选)</label>
+                    <input type="password" id="apiKeyInput" placeholder="已内置默认Key">
+                </div>
+                <button class="test-btn" id="testBtn">测试</button>
+                <span class="status disconnected" id="connectionStatus">● 未连接</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">分析详细程度配置</div>
+            <div class="config-row">
+                <div class="config-item">
+                    <label>选择分析详细程度</label>
+                    <div class="detail-level-group">
+                        <label><input type="radio" name="detailLevel" value="simple" checked> 简易</label>
+                        <label><input type="radio" name="detailLevel" value="medium"> 中等</label>
+                        <label><input type="radio" name="detailLevel" value="detailed"> 详细</label>
+                    </div>
+                    <div class="detail-description" id="detailDescription">
+                        简易模式：生成基础信息表格，包含文献的核心信息和简要摘要，适合快速浏览。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">上传文档</div>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-text">点击选择文件或拖拽到此处</div>
+                <div class="upload-hint">支持 .txt, .doc, .docx, .pdf 格式，可同时选择多个文件</div>
+                <input type="file" id="fileInput" class="file-input" multiple accept=".txt,.doc,.docx,.pdf">
+            </div>
+            <div class="file-list" id="fileList"></div>
+            <button class="action-btn" id="analyzeBtn" disabled>开始分析生成表格</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">分析结果</div>
+            <div class="loading" id="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <div>正在分析文档，生成表格中...</div>
+            </div>
+            <div class="result-area" id="resultArea">分析结果将在这里显示...</div>
+        </div>
+    </div>
+
+    <script>
+        class DocumentAnalyzer {
+            constructor() {
+                this.defaultApiKey = 'sk-85c37dc52bb14463b8ef3f9682f3348f';
+                this.baseUrl = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+                this.uploadedFiles = [];
+                this.fileIds = [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateConnectionStatus(false);
+                this.updateDetailDescription('simple');
+            }
+
+            setupEventListeners() {
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+                const testBtn = document.getElementById('testBtn');
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const detailRadios = document.querySelectorAll('input[name="detailLevel"]');
+
+                uploadArea.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    this.handleFiles(e.dataTransfer.files);
+                });
+
+                fileInput.addEventListener('change', (e) => this.handleFiles(e.target.files));
+                testBtn.addEventListener('click', () => this.testConnection());
+                analyzeBtn.addEventListener('click', () => this.analyzeDocuments());
+
+                detailRadios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        this.updateDetailDescription(e.target.value);
+                    });
+                });
+            }
+
+            updateDetailDescription(level) {
+                const descriptions = {
+                    simple: '简易模式：表格字段完整，但每个字段内容简洁明了，重点突出核心信息，适合快速浏览和概览。',
+                    medium: '中等模式：表格字段完整，每个字段内容适中详细，包含关键要点和主要分析，适合一般研究需求。',
+                    detailed: '详细模式：表格字段完整，每个字段内容全面深入，提供完整分析和详细描述，适合深度研究。'
+                };
+                document.getElementById('detailDescription').textContent = descriptions[level];
+            }
+
+            getSelectedDetailLevel() {
+                return document.querySelector('input[name="detailLevel"]:checked').value;
+            }
+
+            handleFiles(files) {
+                Array.from(files).forEach(file => {
+                    if (this.isValidFile(file)) {
+                        this.uploadedFiles.push(file);
+                        this.addFileToList(file);
+                    }
+                });
+                this.updateAnalyzeButton();
+            }
+
+            isValidFile(file) {
+                const allowedTypes = ['text/plain', 'application/pdf', 'application/msword', 
+                                      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                return allowedTypes.includes(file.type) || /\.(txt|pdf|doc|docx)$/i.test(file.name);
+            }
+
+            addFileToList(file) {
+                const fileList = document.getElementById('fileList');
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-size">(${this.formatFileSize(file.size)})</span>
+                    </div>
+                    <button class="remove-btn">移除</button>
+                `;
+                
+                fileItem.querySelector('.remove-btn').addEventListener('click', () => {
+                    const index = Array.from(fileList.children).indexOf(fileItem);
+                    this.uploadedFiles.splice(index, 1);
+                    fileItem.remove();
+                    this.updateAnalyzeButton();
+                });
+                
+                fileList.appendChild(fileItem);
+            }
+
+            updateAnalyzeButton() {
+                document.getElementById('analyzeBtn').disabled = this.uploadedFiles.length === 0;
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            getApiKey() {
+                const customKey = document.getElementById('apiKeyInput').value.trim();
+                return customKey || this.defaultApiKey;
+            }
+
+            async testConnection() {
+                const testBtn = document.getElementById('testBtn');
+                testBtn.disabled = true;
+                testBtn.textContent = '测试中...';
+
+                try {
+                    const response = await fetch(`${this.baseUrl}/models`, {
+                        headers: { 'Authorization': `Bearer ${this.getApiKey()}` }
+                    });
+                    this.updateConnectionStatus(response.ok);
+                } catch (error) {
+                    this.updateConnectionStatus(false);
+                } finally {
+                    testBtn.disabled = false;
+                    testBtn.textContent = '测试';
+                }
+            }
+
+            updateConnectionStatus(connected) {
+                const status = document.getElementById('connectionStatus');
+                status.textContent = connected ? '● 已连接' : '● 未连接';
+                status.className = `status ${connected ? 'connected' : 'disconnected'}`;
+            }
+
+            async analyzeDocuments() {
+                if (this.uploadedFiles.length === 0) return;
+
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const loading = document.getElementById('loading');
+                const resultArea = document.getElementById('resultArea');
+
+                analyzeBtn.disabled = true;
+                analyzeBtn.textContent = '分析中...';
+                loading.style.display = 'block';
+                resultArea.innerHTML = '';
+
+                try {
+                    this.fileIds = [];
+                    for (const file of this.uploadedFiles) {
+                        const fileId = await this.uploadFile(file);
+                        this.fileIds.push(fileId);
+                    }
+                    await this.generateAnalysisTable();
+                } catch (error) {
+                    resultArea.textContent = `分析失败: ${error.message}`;
+                } finally {
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.textContent = '开始分析生成表格';
+                    loading.style.display = 'none';
+                }
+            }
+
+            async uploadFile(file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('purpose', 'file-extract');
+
+                const response = await fetch(`${this.baseUrl}/files`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${this.getApiKey()}` },
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error(`文件上传失败: ${file.name}`);
+                const data = await response.json();
+                return data.id;
+            }
+
+            generatePrompt(detailLevel) {
+                const basePrompt = `请对上传的文献进行深度分析，生成文献分析表格。
+
+**重要说明：**
+- 无论有多少篇文献，都必须为每篇文献提供充分详细的分析
+- 不要因为文献数量多就压缩或简化内容
+- 每个字段都要认真填写，确保内容充实
+- 如果信息确实无法从文献中获取，才标注"待补充"
+
+`;
+
+                const contentLevelInstructions = {
+                    simple: `**内容详细程度：简易模式**
+- 每个字段内容要简洁明了，突出核心要点
+- 提出的问题：列出1-2个最主要的研究问题，每个问题用1-2句话概括
+- 摘要：对原文摘要进行精简，保留核心观点，控制在3-4句话内
+- 研究思路：用2-3句话概括主要研究方法和思路
+- 文章架构：列出主要章节标题，用简短描述
+- 结论：提炼2-3个最重要的结论，每个用1-2句话说明
+- 研究意义：用2-3句话概括理论和实践意义
+- 摘抄内容：选择1-2处最关键的原文摘抄
+- 关键图表：选择0-1个最重要的图表，简要说明`,
+
+                    medium: `**内容详细程度：中等模式**
+- 每个字段内容适中详细，包含主要要点和关键分析
+- 提出的问题：列出2-3个主要研究问题，每个问题用2-3句话详细描述
+- 摘要：对原文摘要进行适度精简，保留主要内容，控制在5-6句话内
+- 研究思路：用3-5句话描述研究方法、数据来源、分析过程等
+- 文章架构：列出主要章节并简要说明每部分内容
+- 结论：提供3-5个主要结论，每个结论用2-3句话阐述
+- 研究意义：分别阐述理论意义和实践价值，每方面2-3句话
+- 摘抄内容：选择2处重要原文摘抄，包含关键观点
+- 关键图表：选择0-2个重要图表，说明内容和意义`,
+
+                    detailed: `**内容详细程度：详细模式**
+- 每个字段内容全面深入，提供完整分析和详细描述
+- 提出的问题：列出3-5个研究问题，每个问题详细描述背景、具体内容和重要性
+- 摘要：对原文摘要进行合理精简，保持主要内容完整性，但去除冗余表述
+- 研究思路：详细描述整个研究设计，包括理论基础、方法选择、数据收集、分析步骤等
+- 文章架构：详细列出章节结构，说明每部分的主要内容和逻辑关系
+- 结论：提供完整的结论分析，包含4-6个主要发现，每个结论详细阐述
+- 研究意义：深入分析理论贡献、实践应用、政策建议等多个维度
+- 摘抄内容：选择2-3处重要原文摘抄，涵盖关键理论、方法、结论等
+- 关键图表：选择1-2个最重要的图表，详细分析数据内容、趋势和意义`
+                };
+
+                const simpleTable = `**表格1（简易表格）**
+包含以下字段：
+1. 序号
+2. 名称
+3. 作者
+4. 期刊
+5. 被引/下载`;
+
+                const detailedTable = `**表格2（详细表单）**
+为每篇文献生成独立的详细表单，包含以下字段：
+1. **名称**：完整的文献标题
+2. **作者**：所有作者姓名
+3. **文献类型**：被何种数据库收录（如CSSCI、北大核心、SCI等）
+4. **来源**：格式为《期刊名》年份期数页码，不包含DOI
+5. **提出的问题**：列出文献中提出的主要研究问题，用序号1,2,3等标注，每个问题要详细描述，问题之间用单个<br>换行
+6. **摘要**：对原文摘要进行精简处理，去除冗余表述，保留核心观点和主要内容
+7. **研究思路**：详细描述研究的整体思路和方法论，如有多个部分请用单个<br>分隔
+8. **文章架构**：列出文章的主要章节结构和逻辑框架，各章节之间用单个<br>分隔
+9. **结论**：详细阐述文献的主要结论和发现，如有多个结论请用单个<br>分隔
+10. **研究意义**：分析该研究的理论意义和实践价值，分点阐述时用单个<br>换行
+11. **摘抄内容**：摘录文献中的重要段落或观点，每个摘抄之间用单个<br>分隔
+12. **关键图表**：选择最重要的图表，并描述其内容和意义，每个图表之间用单个<br>分隔
+13. **引用**：提供该文献的标准引用格式`;
+                
+                return `${basePrompt}
+
+${contentLevelInstructions[detailLevel]}
+
+${simpleTable}
+
+${detailedTable}
+
+**输出要求：**
+1. 使用HTML表格格式，确保格式整齐美观
+2. 简易表格直接展示，无需额外说明
+3. 每篇文献的详细表单要单独展示，标题为"文献详细分析表 - [文献名称]"
+4. 根据选择的详细程度调整每个字段的内容丰富度，但确保信息准确完整
+5. **重要：换行格式要求**
+   - 只使用单个<br>标签来换行，绝对不要使用多个连续的<br>标签
+   - 序号列表（1,2,3...）之间用单个<br>分隔
+   - 不同部分、章节之间用单个<br>分隔
+   - 多个结论或要点之间用单个<br>分隔
+   - 不同摘抄内容之间用单个<br>分隔
+   - 保持内容紧凑，避免空行过多
+6. 表格第一列要设置合适的宽度，序号列和字段名列不要出现文字换行
+7. 不要使用任何富文本格式（如粗体、斜体等），不要使用段落标签，严格控制只使用单个<br>标签
+8. **严格遵守：绝对不要出现<br><br>这样的连续换行，始终保持单个<br>换行**
+
+请开始分析：`;
+            }
+
+            async generateAnalysisTable() {
+                const detailLevel = this.getSelectedDetailLevel();
+                const userPrompt = this.generatePrompt(detailLevel);
+                const config = {
+                    simple: { maxTokens: 4000 },
+                    medium: { maxTokens: 6000 },
+                    detailed: { maxTokens: 8000 }
+                };
+
+                const systemMessages = [
+                    { role: 'system', content: 'You are a helpful assistant specialized in academic literature analysis. You must provide thorough and comprehensive analysis for each document, regardless of the number of documents being analyzed.' },
+                    ...this.fileIds.map(id => ({ role: 'system', content: `fileid://${id}` }))
+                ];
+
+                const response = await fetch(`${this.baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${this.getApiKey()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'qwen-long',
+                        messages: [...systemMessages, { role: 'user', content: userPrompt }],
+                        stream: true,
+                        stream_options: { include_usage: true },
+                        max_tokens: 8000, // 统一使用较大的token限制
+                        temperature: 0.3
+                    })
+                });
+
+                if (!response.ok) throw new Error('AI分析请求失败');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullContent = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data === '[DONE]') return;
+                            
+                            try {
+                                const parsed = JSON.parse(data);
+                                if (parsed.choices?.[0]?.delta?.content) {
+                                    fullContent += parsed.choices[0].delta.content;
+                                    this.updateResult(fullContent);
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                }
+            }
+
+            updateResult(content) {
+                const resultArea = document.getElementById('resultArea');
+                
+                // 在显示前清理多重换行，只保留单个<br>
+                let cleanedContent = content.replace(/<br\s*\/?>\s*<br\s*\/?>/g, '<br>');
+                cleanedContent = cleanedContent.replace(/(<br\s*\/?>){2,}/g, '<br>');
+                
+                if (cleanedContent.includes('<table') || cleanedContent.includes('<tr')) {
+                    resultArea.innerHTML = cleanedContent;
+                    
+                    // 为详细表格添加切换按钮
+                    const detailedTables = resultArea.querySelectorAll('.detailed-table');
+                    detailedTables.forEach((table) => {
+                        if (!table.previousElementSibling || !table.previousElementSibling.classList.contains('toggle-btn')) {
+                            const toggleBtn = document.createElement('button');
+                            toggleBtn.className = 'toggle-btn';
+                            toggleBtn.textContent = '显示/隐藏详细信息';
+                            toggleBtn.onclick = function() {
+                                table.style.display = table.style.display === 'none' ? 'table' : 'none';
+                            };
+                            table.parentNode.insertBefore(toggleBtn, table);
+                            table.style.display = 'none';
+                        }
+                    });
+                } else {
+                    resultArea.textContent = cleanedContent;
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => new DocumentAnalyzer());
+    </script>
+</body>
+</html>

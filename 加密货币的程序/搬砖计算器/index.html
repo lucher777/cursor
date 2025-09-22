@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <title>虚拟币收益计算器</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1e40af;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #1e40af;
+        }
+
+        label {
+            font-size: 1.3rem;
+            color: #4b5563;
+        }
+
+        input {
+            font-size: 2rem;
+            padding: 1.5rem 2rem;
+            border-width: 4px;
+            border-radius: 1rem;
+            height: auto;
+        }
+
+       .total-price {
+            color: #3498db;
+        }
+
+       .net-profit {
+            color: #e74c3c;
+        }
+
+       .profit-rate {
+            color: #2ecc71;
+        }
+
+       .total-price-bg {
+            background-color: #d6eaf8;
+        }
+
+       .net-profit-bg {
+            background-color: #fadbd8;
+        }
+
+       .profit-rate-bg {
+            background-color: #d5f5e3;
+        }
+
+       .result-text {
+            font-size: 1.5rem;
+        }
+
+       .quantity-label {
+            color: #7342d6;
+        }
+
+       .quantity-value {
+            color: #FFA500;
+            font-weight: bold;
+        }
+
+       .editable-text-bg {
+            background-color: #fff3bf;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-8">
+        <h1 class="text-center mb-6">虚拟币跨交易所收益计算器</h1>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <!-- 交易所和币种名称修改 -->
+            <div class="mb-4 text-center">
+                <div class="flex justify-center space-x-2 w-1/2 mx-auto">
+                    <div class="flex items-center">
+                        <label for="exchangeA" class="mr-1">A：</label>
+                        <input type="text" id="exchangeA" class="border border-gray-300 p-2 w-full rounded-md" value="MEXC">
+                    </div>
+                    <div class="flex items-center">
+                        <label for="exchangeB" class="mr-1">B：</label>
+                        <input type="text" id="exchangeB" class="border border-gray-300 p-2 w-full rounded-md" value="XT">
+                    </div>
+                    <div class="flex items-center">
+                        <label for="coinType" class="mr-1">币：</label>
+                        <input type="text" id="coinType" class="border border-gray-300 p-2 w-full rounded-md" value="FIGHT">
+                    </div>
+                </div>
+            </div>
+            <!-- 本金输入 -->
+            <div class="mb-4 text-center">
+                <label for="principal" class="block mb-2">本金 (U)：</label>
+                <input type="text" id="principal" class="border border-gray-300 p-2 w-1/2 mx-auto rounded-md" value="1000">
+            </div>
+            <!-- A 交易所相关信息 -->
+            <div class="mb-4 bg-blue-100 p-4 rounded-md flex" id="exchangeAInfo">
+                <div class="w-1/5 flex items-center justify-center text-8xl font-bold text-blue-600 exchangeAInitial">M</div>
+                <div class="w-4/5">
+                    <label for="buyPriceA" class="block mb-2">
+                        <span class="exchangeAFullName editable-text-bg">MEXC</span> 交易所购买 <span id="coinTypeDisplay" class="editable-text-bg">FIGHT</span> 单价 (U)：
+                    </label>
+                    <input type="text" id="buyPriceA" class="border border-gray-300 p-2 w-full rounded-md" value="0.0007202">
+                    <p id="quantityResult" class="text-gray-500 text-sm hidden flex items-center">
+                        <span class="font-bold mr-2 quantity-label">购买 <span id="coinTypeDisplay2" class="editable-text-bg">FIGHT</span> 数量：</span>
+                        <span id="quantity" class="mr-1 quantity-value"></span> 
+                        <span>个</span>
+                    </p>
+                    <label for="withdrawalFeeB" class="block mb-2 mt-4">提现到 <span class="exchangeBFullName editable-text-bg">XT</span> 交易所手续费（个）：</label>
+                    <input type="text" id="withdrawalFeeB" class="border border-gray-300 p-2 w-full rounded-md" value="2090">
+                    <p id="withdrawalQuantityResult" class="text-gray-500 text-sm hidden flex items-center">
+                        <span class="flex items-center">
+                            <span class="font-bold mr-1 quantity-label">提现 <span id="coinTypeDisplay3" class="editable-text-bg">FIGHT</span> 数量：</span>
+                            <span id="withdrawalQuantity" class="quantity-value"></span> 
+                            <span>个</span>
+                            <span class="ml-4">提现手续费：<span id="withdrawalFeeAmount" class="quantity-value"></span> U</span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="text-center mb-4">
+                <i class="fa-solid fa-arrow-down text-2xl text-gray-500"></i>
+            </div>
+            <!-- B 交易所相关信息 -->
+            <div class="mb-4 bg-green-100 p-4 rounded-md flex" id="exchangeBInfo">
+                <div class="w-1/5 flex items-center justify-center text-8xl font-bold text-green-600 exchangeBInitial">X</div>
+                <div class="w-4/5">
+                    <label for="sellPriceB" class="block mb-2">
+                        <span class="exchangeBFullName editable-text-bg">XT</span> 交易卖出 <span id="coinTypeDisplay4" class="editable-text-bg">FIGHT</span> 单价 (U)：
+                    </label>
+                    <input type="text" id="sellPriceB" class="border border-gray-300 p-2 w-full rounded-md" value="0.000737">
+                    <p id="sellableQuantityResult" class="text-gray-500 text-sm hidden flex items-center">
+                        <span class="flex items-center">
+                            <span class="font-bold mr-1 quantity-label">可卖出 <span id="coinTypeDisplay5" class="editable-text-bg">FIGHT</span> 数量：</span>
+                            <span id="sellableQuantity" class="quantity-value"></span> 
+                            <span>个</span>
+                        </span>
+                    </p>
+                    <label for="withdrawalFeeA" class="block mb-2 mt-4">提现到 <span class="exchangeAFullName editable-text-bg">MEXC</span> 交易所手续费 (U)：</label>
+                    <input type="text" id="withdrawalFeeA" class="border border-gray-300 p-2 w-full rounded-md" value="0.5">
+                </div>
+            </div>
+            <div class="text-center">
+                <button onclick="updateExchangeNames(); updateCoinType(); calculateProfit()" class="bg-blue-600 text-white p-2 w-1/2 mx-auto rounded-md hover:bg-blue-700">计算收益</button>
+            </div>
+        </div>
+        <div id="result" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
+            <h2 class="mb-4">计算结果</h2>
+            <div class="flex flex-wrap -mx-2">
+                <!-- 总价列 -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
+                    <div class="p-4 rounded-md total-price-bg">
+                        <p class="flex items-center result-text">
+                            <span class="font-bold mr-2">总价：</span>
+                            <span id="sellTotal" class="total-price"></span> 
+                            <span>U</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- 净收益列 -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
+                    <div class="p-4 rounded-md net-profit-bg">
+                        <p class="flex items-center result-text">
+                            <span class="font-bold mr-2">净收益：</span>
+                            <span id="netProfit" class="net-profit"></span> 
+                            <span>U</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- 收益率列 -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
+                    <div class="p-4 rounded-md profit-rate-bg">
+                        <p class="flex items-center result-text">
+                            <span class="font-bold mr-2">收益率：</span>
+                            <span id="profitRate" class="profit-rate"></span> 
+                            <span>%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateExchangeNames() {
+            const exchangeA = document.getElementById('exchangeA').value;
+            const exchangeB = document.getElementById('exchangeB').value;
+
+            document.querySelectorAll('.exchangeAInitial').forEach((el) => {
+                el.textContent = exchangeA.charAt(0).toUpperCase();
+            });
+            document.querySelectorAll('.exchangeAFullName').forEach((el) => {
+                el.textContent = exchangeA;
+            });
+            document.querySelectorAll('.exchangeBInitial').forEach((el) => {
+                el.textContent = exchangeB.charAt(0).toUpperCase();
+            });
+            document.querySelectorAll('.exchangeBFullName').forEach((el) => {
+                el.textContent = exchangeB;
+            });
+        }
+
+        function updateCoinType() {
+            const coinType = document.getElementById('coinType').value;
+            document.querySelectorAll('#coinTypeDisplay, #coinTypeDisplay2, #coinTypeDisplay3, #coinTypeDisplay4, #coinTypeDisplay5').forEach((el) => {
+                el.textContent = coinType;
+            });
+        }
+
+        function calculateProfit() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const withdrawalFeeA = parseFloat(document.getElementById('withdrawalFeeA').value);
+            const buyPriceA = parseFloat(document.getElementById('buyPriceA').value);
+            const withdrawalFeeB = parseFloat(document.getElementById('withdrawalFeeB').value);
+            const sellPriceB = parseFloat(document.getElementById('sellPriceB').value);
+
+            const quantity = principal / buyPriceA;
+            const withdrawalQuantity = quantity - withdrawalFeeB;
+            const sellableQuantity = withdrawalQuantity;
+            const sellTotal = sellableQuantity * sellPriceB;
+            const netProfit = sellTotal - principal;
+            const profitRate = (netProfit / principal) * 100;
+            const withdrawalFeeAmount = withdrawalFeeB * buyPriceA;
+
+            document.getElementById('quantity').textContent = quantity.toFixed(2);
+            document.getElementById('withdrawalQuantity').textContent = withdrawalQuantity.toFixed(2);
+            document.getElementById('sellableQuantity').textContent = sellableQuantity.toFixed(2);
+            document.getElementById('sellTotal').textContent = sellTotal.toFixed(2);
+            document.getElementById('netProfit').textContent = netProfit.toFixed(2);
+            document.getElementById('profitRate').textContent = profitRate.toFixed(2);
+            document.getElementById('withdrawalFeeAmount').textContent = withdrawalFeeAmount.toFixed(2);
+
+            document.getElementById('quantityResult').classList.remove('hidden');
+            document.getElementById('withdrawalQuantityResult').classList.remove('hidden');
+            document.getElementById('sellableQuantityResult').classList.remove('hidden');
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
+    

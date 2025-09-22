@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算器</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/calculator.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html" class="logo-link"><span class="logo-icon">🧰</span><span class="logo-text">工具箱</span></a></div>
+    <nav class="nav-links" id="nav-links"></nav>
+    <div class="lang-switch">
+      <select id="lang-select"></select>
+    </div>
+  </header>
+  <main>
+    <section class="calculator-card compact">
+      <div class="calc-title"><span class="calc-icon">🧮</span><span id="calc-title-text"></span></div>
+      <div class="calc-screen" id="calc-screen">0</div>
+      <div class="calc-buttons" id="calc-buttons"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <span id="footer-text"></span>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/calculator.js"></script>
+</body>
+</html> 

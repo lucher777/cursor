@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟币交易系统 - 快速访问</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .status {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .big-button {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .address {
+            font-family: 'Consolas', monospace;
+            background: #333;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 虚拟币自动交易系统</h1>
+        
+        <div class="status">
+            ✅ 系统正在运行
+        </div>
+        
+        <div class="info">
+            <h3>📊 Web交易界面</h3>
+            <p>点击下面的按钮直接访问交易界面：</p>
+            <div class="address">http://127.0.0.1:8050</div>
+        </div>
+        
+        <a href="http://127.0.0.1:8050" class="big-button" target="_blank">
+            🖥️ 打开交易界面
+        </a>
+        
+        <button class="big-button" onclick="window.location.reload()">
+            🔄 刷新状态
+        </button>
+        
+        <div class="warning">
+            <strong>💡 使用提示：</strong><br>
+            • 系统默认运行在安全的模拟模式<br>
+            • 可以查看实时价格图表和技术指标<br>
+            • 不会执行真实交易，完全安全
+        </div>
+        
+        <div class="info">
+            <h3>🛠️ 系统功能</h3>
+            <p>✨ 实时价格监控</p>
+            <p>📈 技术指标分析</p>
+            <p>🔍 交易信号检测</p>
+            <p>📊 可视化图表界面</p>
+        </div>
+    </div>
+    
+    <script>
+        // 自动检查服务状态
+        function checkStatus() {
+            fetch('http://127.0.0.1:8050')
+                .then(response => {
+                    if (response.ok) {
+                        document.querySelector('.status').innerHTML = '✅ 系统正在运行';
+                        document.querySelector('.status').style.background = '#4CAF50';
+                    }
+                })
+                .catch(error => {
+                    document.querySelector('.status').innerHTML = '❌ 系统未运行';
+                    document.querySelector('.status').style.background = '#f44336';
+                });
+        }
+        
+        // 页面加载时检查状态
+        checkStatus();
+        
+        // 每30秒检查一次状态
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>

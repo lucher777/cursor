@@ -1,0 +1,247 @@
+.unit-container {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* 单位类型导航 */
+.unit-nav {
+  display: flex;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(59,183,143,0.1);
+  overflow-x: auto;
+  gap: 0.5rem;
+}
+
+.unit-nav-item {
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #666;
+  white-space: nowrap;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.unit-nav-item:hover {
+  background: rgba(59,183,143,0.1);
+  color: #0bab64;
+}
+
+.unit-nav-item.active {
+  background: #0bab64;
+  color: white;
+  box-shadow: 0 2px 8px rgba(11,171,100,0.3);
+}
+
+/* 单位内容区域 */
+
+/* 小标题统一样式 */
+.unit-section-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+.unit-content {
+  display: none;
+}
+
+.unit-content.active {
+  display: block;
+}
+
+.unit-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: stretch; /* 让列高度一致 */
+}
+
+/* 单位列 */
+.unit-column {
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(59,183,143,0.1);
+}
+
+.unit-section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0bab64;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e6f7f1;
+}
+
+.unit-section-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.unit-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.unit-section-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.unit-reset-btn {
+  background: #3bb78f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.unit-reset-btn:hover {
+  background: #0bab64;
+}
+
+/* 单位表格 */
+.unit-table {
+  margin-bottom: 1.5rem;
+}
+
+.unit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.unit-row:last-child {
+  border-bottom: none;
+}
+
+.unit-name {
+  flex: none;
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.unit-input {
+  width: 60%;
+  min-width: 100px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: right;
+  background: #fff;
+  transition: border-color 0.3s;
+}
+
+.unit-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.unit-input:hover {
+  border-color: #3bb78f;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .unit-columns {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .unit-input {
+    width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .unit-container {
+    padding: 0 0.5rem;
+    margin: 1rem auto;
+  }
+  
+  .unit-nav {
+    padding: 0.3rem;
+    gap: 0.3rem;
+  }
+  
+  .unit-nav-item {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .unit-column {
+    padding: 1rem;
+  }
+  
+  .unit-section-title {
+    font-size: 1.2rem;
+  }
+  
+  .unit-input {
+    width: 90%;
+    font-size: 0.85rem;
+  }
+  
+  .unit-name {
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .unit-nav {
+    flex-wrap: wrap;
+  }
+  
+  .unit-nav-item {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+  
+  .unit-input {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+  
+  .unit-name {
+    font-size: 0.85rem;
+    min-width: 60px;
+  }
+}
+
+/* 单位分类标签 */
+.unit-category-tag {
+  background: #e6f7f1;
+  color: #0bab64;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin: 0 0 1rem 0;
+  display: inline-block;
+}
+
+/* 压力功率专用间距 */
+
+
+.unit-content {
+  padding-top: 1.5rem;
+}

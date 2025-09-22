@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咨询订单 - BuyEdu 学生邮箱购买平台</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="查询您的学生邮箱订单状态，输入订单号即可查看详细信息和物流状态">
+    <meta name="keywords" content="订单查询,学生邮箱订单,edu邮箱订单状态,BuyEdu订单">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .order-inquiry-page {
+            min-height: calc(100vh - 120px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 0;
+        }
+        
+        .inquiry-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .inquiry-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+        }
+        
+        .inquiry-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .inquiry-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .inquiry-subtitle {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .inquiry-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .form-input:focus {
+            border-color: #5cb3cc;
+            box-shadow: 0 0 0 3px rgba(92, 179, 204, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: #999;
+        }
+        
+        .inquiry-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e5e5e5;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .btn-telegram {
+            background: linear-gradient(135deg, #0088cc 0%, #229ED9 100%);
+            color: white;
+        }
+        
+        .btn-telegram:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 136, 204, 0.3);
+        }
+        
+        .help-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .help-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .help-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .help-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .help-item:last-child {
+            border-bottom: none;
+        }
+        
+        .help-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .help-content h4 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .help-content p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .notice-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .notice-title {
+            color: #856404;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .notice-text {
+            color: #856404;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .inquiry-card {
+                padding: 25px;
+            }
+            
+            .inquiry-title {
+                font-size: 24px;
+            }
+            
+            .inquiry-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header class="header" role="banner">
+        <div class="container">
+            <nav class="nav" role="navigation" aria-label="主导航">
+                <div class="logo" onclick="goToHome()" style="cursor: pointer;" role="button" tabindex="0" aria-label="返回首页">
+                    <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                    <span>BuyEdu</span>
+                </div>
+                <div class="search-bar" role="search">
+                    <input type="text" placeholder="搜索学生邮箱、edu邮箱..." readonly aria-label="搜索商品">
+                    <button aria-label="执行搜索"><i class="fas fa-search" aria-hidden="true"></i></button>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn-outline" onclick="showOnlineService()" aria-label="联系在线客服">在线客服</button>
+                    <button class="btn-primary" onclick="goToHome()" aria-label="返回首页">返回首页</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="order-inquiry-page" role="main">
+        <div class="inquiry-container">
+            <div class="inquiry-card">
+                <div class="inquiry-header">
+                    <h1 class="inquiry-title">
+                        <i class="fas fa-search" style="color: #667eea;"></i>
+                        订单查询服务
+                    </h1>
+                    <p class="inquiry-subtitle">
+                        查询您的订单状态、获取产品信息或联系客服支持<br>
+                        我们提供专业的售前售后服务，确保您的购买体验
+                    </p>
+                </div>
+
+                <!-- 选项卡 -->
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('order')">
+                        <i class="fas fa-clipboard-list"></i> 订单查询
+                    </button>
+                    <button class="tab" onclick="switchTab('email')">
+                        <i class="fas fa-envelope"></i> 邮箱查询
+                    </button>
+                    <button class="tab" onclick="switchTab('cache')">
+                        <i class="fas fa-box"></i> 缓存查询
+                    </button>
+                </div>
+
+                <!-- 订单查询选项卡 -->
+                <div id="orderTab" class="tab-content active">
+                    <form class="inquiry-form" onsubmit="queryOrder(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="orderNumber">
+                                <i class="fas fa-hashtag"></i> 订单号
+                            </label>
+                            <input 
+                                type="text" 
+                                id="orderNumber" 
+                                class="form-input" 
+                                placeholder="请输入您的订单编号，例如：ORD202412..."
+                                required
+                            >
+                        </div>
+                        
+                        <div class="inquiry-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> 立即查询
+                            </button>
+                            <button type="button" class="btn btn-telegram" onclick="contactTelegram()">
+                                <i class="fab fa-telegram"></i> 联系客服
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 邮箱查询选项卡 -->
+                <div id="emailTab" class="tab-content">
+                    <form class="inquiry-form" onsubmit="queryByEmail(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="emailAddress">
+                                <i class="fas fa-envelope"></i> 邮箱地址
+                            </label>
+                            <input 
+                                type="email" 
+                                id="emailAddress" 
+                                class="form-input" 
+                                placeholder="请输入您购买时填写的邮箱地址"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="inquiry-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> 查询订单
+                            </button>
+                            <button type="button" class="btn btn-telegram" onclick="contactTelegram()">
+                                <i class="fab fa-telegram"></i> 联系客服
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 缓存查询选项卡 -->
+                <div id="cacheTab" class="tab-content">
+                    <form class="inquiry-form" onsubmit="queryCache(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="cacheKey">
+                                <i class="fas fa-key"></i> 缓存标识
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cacheKey" 
+                                class="form-input" 
+                                placeholder="请输入缓存标识或相关信息"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="inquiry-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> 查询缓存
+                            </button>
+                            <button type="button" class="btn btn-telegram" onclick="contactTelegram()">
+                                <i class="fab fa-telegram"></i> 联系客服
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 重要提示 -->
+                <div class="notice-box">
+                    <div class="notice-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        重要提示
+                    </div>
+                    <p class="notice-text">
+                        注意：最多只能查询近15笔订单。如果您的订单超过15笔或查询遇到问题，请直接联系客服获取帮助。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 帮助信息 -->
+            <div class="inquiry-card">
+                <div class="help-section">
+                    <h2 class="help-title">
+                        <i class="fas fa-question-circle"></i>
+                        常见问题
+                    </h2>
+                    <ul class="help-list">
+                        <li class="help-item">
+                            <div class="help-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="help-content">
+                                <h4>订单多久能发货？</h4>
+                                <p>所有商品均为自动发货，支付成功后1-5分钟内会自动发送到您的邮箱。如超时未收到，请检查垃圾邮件或联系客服。</p>
+                            </div>
+                        </li>
+                        <li class="help-item">
+                            <div class="help-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="help-content">
+                                <h4>账号安全保障</h4>
+                                <p>所有在售edu邮箱均保证账号密码正确，仅保证首次登录。收到账号后请立即修改密码以确保安全。</p>
+                            </div>
+                        </li>
+                        <li class="help-item">
+                            <div class="help-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="help-content">
+                                <h4>售后服务</h4>
+                                <p>提供专业的售前、售后服务。如有任何问题，可通过Telegram联系客服 @buymailbot1 获取及时帮助。</p>
+                            </div>
+                        </li>
+                        <li class="help-item">
+                            <div class="help-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="help-content">
+                                <h4>支付方式</h4>
+                                <p>支持微信、支付宝、USDT、TRX等多种支付方式。支付问题请先查看帮助文档或联系客服处理。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 切换选项卡
+        function switchTab(tabName) {
+            // 移除所有选项卡的活动状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 激活当前选项卡
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // 订单查询
+        function queryOrder(event) {
+            event.preventDefault();
+            const orderNumber = document.getElementById('orderNumber').value.trim();
+            
+            if (!orderNumber) {
+                alert('请输入订单号');
+                return;
+            }
+            
+            // 显示查询提示
+            alert('正在为您查询订单信息...\n\n由于系统升级，请联系客服 @buymailbot1 获取最新订单状态。');
+            
+            // 延迟跳转到Telegram
+            setTimeout(() => {
+                contactTelegram();
+            }, 1000);
+        }
+
+        // 邮箱查询
+        function queryByEmail(event) {
+            event.preventDefault();
+            const email = document.getElementById('emailAddress').value.trim();
+            
+            if (!email) {
+                alert('请输入邮箱地址');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+            
+            alert('正在为您查询相关订单...\n\n请联系客服 @buymailbot1 提供您的邮箱地址以获取订单信息。');
+            
+            setTimeout(() => {
+                contactTelegram();
+            }, 1000);
+        }
+
+        // 缓存查询
+        function queryCache(event) {
+            event.preventDefault();
+            const cacheKey = document.getElementById('cacheKey').value.trim();
+            
+            if (!cacheKey) {
+                alert('请输入缓存标识');
+                return;
+            }
+            
+            alert('正在查询缓存信息...\n\n请联系客服 @buymailbot1 获取详细的缓存查询服务。');
+            
+            setTimeout(() => {
+                contactTelegram();
+            }, 1000);
+        }
+
+        // 联系Telegram客服
+        function contactTelegram() {
+            window.open('https://t.me/buymailbot1', '_blank');
+        }
+
+        // 在线客服
+        function showOnlineService() {
+            contactTelegram();
+        }
+
+        // 返回首页
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+
+        // 邮箱验证
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 可以在这里添加页面初始化逻辑
+            console.log('订单查询页面已加载');
+        });
+    </script>
+    <script src="js/script-loader.js"></script>
+    <script src="js/analytics-loader.js"></script>
+</body>
+</html>

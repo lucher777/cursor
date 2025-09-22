@@ -1,0 +1,13 @@
+{
+  "configs": [
+    {
+      "id": "3b29dd9c-d2e0-4763-bbff-82295f4ee565",
+      "name": "翻译接口 (示例)",
+      "externalApiUrl": "https://uapis.cn/api/fanyi?text={{query.text}}",
+      "isEnabled": true,
+      "customFields": "{\n  \"source\": \"MyGateway\",\n  \"author\": \"Gemini\"\n}",
+      "visibleFields": "",
+      "requiredFields": "code,result"
+    }
+  ]
+}

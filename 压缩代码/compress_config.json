@@ -1,0 +1,46 @@
+{
+  "compression_settings": {
+    "html": {
+      "enabled": true,
+      "remove_comments": true,
+      "remove_whitespace": true,
+      "preserve_tags": ["pre", "textarea", "script", "style"]
+    },
+    "css": {
+      "enabled": true,
+      "remove_comments": true,
+      "remove_whitespace": true,
+      "minify_selectors": true
+    },
+    "js": {
+      "enabled": true,
+      "remove_comments": true,
+      "remove_whitespace": true,
+      "preserve_strings": true,
+      "preserve_regex": true
+    }
+  },
+  "file_settings": {
+    "skip_patterns": [
+      "node_modules",
+      ".git",
+      "__pycache__",
+      ".pyc",
+      "compressed",
+      "compress.py",
+      "*.min.js",
+      "*.min.css"
+    ],
+    "binary_extensions": [
+      ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".ico",
+      ".pdf", ".zip", ".rar", ".7z",
+      ".exe", ".dll", ".so",
+      ".ttf", ".woff", ".woff2", ".eot"
+    ]
+  },
+  "output_settings": {
+    "default_output_dir": "compressed",
+    "preserve_structure": true,
+    "create_backup": false
+  }
+}

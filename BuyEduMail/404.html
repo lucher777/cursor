@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面未找到 - BuyEdu</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="抱歉，您访问的页面不存在。请返回BuyEdu首页继续浏览学生邮箱和数字产品。">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://buyedu.cn/">
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-container {
+            max-width: 600px;
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        .error-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .error-description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .error-description {
+                font-size: 1rem;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-page">
+        <div class="error-container">
+            <div class="error-code">404</div>
+            <h1 class="error-title">页面未找到</h1>
+            <p class="error-description">
+                抱歉，您访问的页面不存在或已被移动。<br>
+                请返回首页继续浏览我们的学生邮箱和数字产品。
+            </p>
+            
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    返回首页
+                </a>
+                <a href="javascript:history.back()" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    返回上页
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 自动跳转脚本 -->
+    <script>
+        // 5秒后自动跳转到首页（可选）
+        setTimeout(function() {
+            if (confirm('是否要自动跳转到首页？')) {
+                window.location.href = '/';
+            }
+        }, 5000);
+        
+        // 记录404错误（用于分析）
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                page_title: '404 Error',
+                page_location: window.location.href
+            });
+        }
+    </script>
+</body>
+</html>

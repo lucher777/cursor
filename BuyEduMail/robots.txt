@@ -1,0 +1,37 @@
+User-agent: *
+Allow: /
+
+# 禁止访问系统管理和私密文件
+Disallow: /dashboard.html
+Disallow: /access.html
+Disallow: /js/dashboard.js
+Disallow: /data/
+Disallow: /test_
+
+# 允许搜索引擎访问主要页面
+Allow: /index.html
+Allow: /buy.html
+Allow: /order-inquiry.html
+# 不允许访问系统登录页面
+Allow: /css/
+Allow: /js/main.js
+Allow: /js/seo-performance.js
+Allow: /js/script-loader.js
+Allow: /sitemap.xml
+Allow: /favicon.ico
+
+# 网站地图
+Sitemap: https://buyedu.cn/sitemap.xml
+
+# 爬取延迟（秒）
+Crawl-delay: 1
+
+# 特定搜索引擎设置
+User-agent: Baiduspider
+Crawl-delay: 2
+
+User-agent: Googlebot
+Crawl-delay: 1
+
+User-agent: bingbot
+Crawl-delay: 1

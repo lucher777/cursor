@@ -1,0 +1,122 @@
+# SEO和性能优化配置
+
+# 启用压缩
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# 启用Gzip压缩
+<IfModule mod_gzip.c>
+    mod_gzip_on Yes
+    mod_gzip_dechunk Yes
+    mod_gzip_item_include file \.(html?|txt|css|js|php|pl)$
+    mod_gzip_item_include mime ^text/.*
+    mod_gzip_item_include mime ^application/x-javascript.*
+    mod_gzip_item_exclude mime ^image/.*
+    mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</IfModule>
+
+# 设置缓存
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # 图片缓存1个月
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS和JS缓存1周
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/x-javascript "access plus 1 week"
+    
+    # HTML文件缓存1小时
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # 字体文件缓存1个月
+    ExpiresByType font/woff "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 month"
+    ExpiresByType application/font-woff "access plus 1 month"
+    ExpiresByType application/font-woff2 "access plus 1 month"
+</IfModule>
+
+# 设置ETag
+<IfModule mod_headers.c>
+    # 移除ETag
+    Header unset ETag
+    FileETag None
+    
+    # 设置安全头
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # 设置缓存控制
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=3600"
+    </FilesMatch>
+</IfModule>
+
+# URL重写规则
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 强制HTTPS（如果有SSL证书）
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # 移除trailing slash（可选）
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{THE_REQUEST} \s[^?]*?//
+    RewriteRule ^.*$ /$0 [R=301,L]
+    
+    # 友好URL重写（可根据需要添加）
+    # RewriteRule ^product/([0-9]+)/?$ buy.html?product=$1 [L,QSA]
+    # RewriteRule ^category/([^/]+)/?$ index.html?category=$1 [L,QSA]
+</IfModule>
+
+# 防止目录浏览
+Options -Indexes
+
+# 保护敏感文件
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# 保护配置文件
+<Files "config.json">
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# 自定义错误页面
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# MIME类型设置
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType image/webp .webp
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+</IfModule>

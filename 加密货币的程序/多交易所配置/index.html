@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <!-- ... 其他head内容 ... -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交易所价格展示</title>
+    <meta name="access-control-allow-origin" content="*">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+
+</head>
+
+<body class="bg-gray-100 p-8">
+    <!-- CoinGecko 数据获取和存储功能区域 -->
+<!-- ... existing code ... -->
+<!-- ... existing code ... -->
+<div class="bg-white p-2 rounded shadow-md absolute-storage-container abs-flex">
+
+    <!-- 移除 btn-left 中的 flex 类 -->
+    <div class="btn-left">
+        <div class="space-y-1">
+            <button id="start-fetch" onclick="startFetching()"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded short-big-button">
+                采集数据
+            </button>
+            <button id="delete-storage" onclick="deleteDB()"
+                class="bg-red-500 hover:bg-red-600 text-white font-bold rounded short-big-button">
+                删除
+            </button>
+        </div>
+    </div>
+    <div id="dbStatusContainer" class="status-right mt-1 p-1 bg-gray-50 rounded" style="max-height: 20vh; overflow-y: auto;">
+        <div id="dbStatusContent" class="text-[0.65rem] space-y-0.5"></div>
+    </div>
+</div>
+
+
+
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+        交易所实时价格
+    </h2>
+<div class="fetch-status" >
+    <p id="fetch-status">等待用户指令。。。</p>
+</div>
+
+
+    <div class="flex justify-center space-x-4 mb-2">
+        <!-- 替换筛选输入框和按钮为刷新按钮 -->
+        <button id="refresh-button" onclick="refreshPanels()"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            刷新数据
+        </button>
+    </div>
+
+
+    <div class="stats text-center mb-8">
+  
+    </div>
+
+    <!-- 修改交易所选择部分 -->
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- 面板1 -->
+        <div class="exchange-panel bg-white p-6 rounded shadow-md w-[28%]" data-panel="1">
+            <!-- 单选框选择区域 -->
+            <div class="exchange-radios mb-4 p-2 bg-gray-50 rounded">
+                <h4 class="font-bold mb-2">选择交易所1:
+                    <span class="exchange-count text-sm text-gray-600 mb-4">
+                        <span></span>
+                    </span>
+
+                </h4>
+                <div class="grid grid-cols-5 gap-2">
+                    <!-- 删除“请选择”按钮 -->
+                    <!-- 动态添加交易所选项 -->
+                    <template id="exchange-radio-template">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="exchange1" value="" class="hidden peer unselectable">
+                            <span class="px-2 py-1 bg-gray-200 hover:bg-gray-300 peer-checked:bg-blue-500 peer-checked:text-white rounded text-sm"></span>
+                        </label>
+                    </template>
+                </div>
+            </div>
+    
+
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th onclick="toggleSort(1, 'symbol')" class="sortable" style="width:30%">
+                            COIN <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-1-symbol"></i>
+                        </th>
+                        <th onclick="toggleSort(1, 'price')" class="sortable" style="width:25%">
+                            PRICE <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-1-price"></i>
+                        </th>
+                        <th onclick="toggleSort(1, 'vol24h')" class="sortable" style="width:25%">
+                            VOL24 <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-1-vol24h"></i>
+                        </th>
+                        <th onclick="toggleSort(1, 'market_cap_rank')" class="sortable" style="width:20%">
+                            TOP <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-1-market_cap_rank"></i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="exchange-rows">
+                    <tr>
+                        <td colspan="4" class="text-center text-gray-500">请选择交易所查看数据</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        <!-- 面板2 -->
+        <div class="exchange-panel bg-white p-6 rounded shadow-md w-[28%]" data-panel="2">
+            <!-- 单选框选择区域 -->
+            <div class="exchange-radios mb-4 p-2 bg-gray-50 rounded">
+                <h4 class="font-bold mb-2">选择交易所2:
+                    <span class="exchange-count text-sm text-gray-600 mb-4">
+                        <span></span>
+                    </span>
+
+                </h4>
+             
+                <div class="grid grid-cols-5 gap-2">
+                    <!-- 删除“请选择”按钮 -->
+                    <!-- 动态添加交易所选项 -->
+                    <template id="exchange-radio-template">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="exchange2" value="" class="hidden peer">
+                            <span class="px-2 py-1 bg-gray-200 hover:bg-gray-300 peer-checked:bg-blue-500 peer-checked:text-white rounded text-sm"></span>
+                        </label>
+                    </template>
+                </div>
+            </div>
+    
+
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th style="width:30%" onclick="toggleSort(2, 'symbol')" class="sortable">
+                            COIN <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-2-symbol"></i>
+                        </th>
+                        <th style="width:25%" onclick="toggleSort(2, 'price')" class="sortable">
+                            PRICE <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-2-price"></i>
+                        </th>
+                        <th style="width:25%" onclick="toggleSort(2, 'vol24h')" class="sortable">
+                            VOL24 <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-2-vol24h"></i>
+                        </th>
+                        <th style="width:20%" onclick="toggleSort(2, 'market_cap_rank')" class="sortable">
+                            TOP <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-2-market_cap_rank"></i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="exchange-rows">
+                    <tr>
+                        <td colspan="4" class="text-center text-gray-500">请选择交易所查看数据</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="exchange-panel bg-white p-4 rounded shadow-md w-[44%]" data-panel="3">
+            <h4 class="text-lg font-bold mb-4">相同交易对对比
+
+                <span id="same-pairs-count" class="exchange-count"></span>
+
+            </h4>
+
+            <div class="select-sort-container">
+                <input type="text" id="same-pairs-search" placeholder="搜索交易对"
+                    class="p-2 border border-gray-300 rounded">
+            </div>
+          
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th onclick="toggleSort(3, 'symbol')" class="sortable">
+                            COIN
+                            <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-3-symbol"></i>
+                        </th>
+                        <th onclick="toggleSort(3, 'price1')" class="sortable">
+                            PRICE1 <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-3-price1"></i>
+                        </th>
+                        <th onclick="toggleSort(3, 'price2')" class="sortable">
+                            PRICE2 <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-3-price2"></i>
+                        </th>
+                        <th onclick="toggleSort(3, 'diff')" class="sortable">
+                            DIFF <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-3-diff"></i>
+                        </th>
+                        <th onclick="toggleSort(3, 'market_cap_rank')" class="sortable">
+                            T <i class="fa-solid fa-sort fa-lg ml-2" id="sort-icon-3-market_cap_rank"></i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="same-pairs-row">
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500">请选择两个交易所进行对比</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+      
+    </div>
+
+    <div id="search-container" class="absolute top-4 right-4">
+        <input type="text" id="search-input" placeholder="搜索交易对" class="mb-4 p-2 border border-gray-300 rounded mr-2">
+        <button onclick="searchCoin()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            搜索
+        </button>
+    </div>
+
+
+
+    <div id="search-result">
+
+        <h3 class="text-lg font-bold mb-2">搜索结果
+            <span onclick="closeSearchResult()"
+            class="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 text-gray-700 p-1 rounded">
+            <i class="fa-solid fa-xmark"></i>
+        </span>
+        </h3>
+        <div id="search-result-content"></div>
+    </div>
+
+
+    <!-- 不能删除，这是存本地数据的 -->
+    <div id="save-status"></div>
+   <div id="storage-status"></div>
+
+<!-- 在body标签内添加 -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <h3>选择要删除的数据</h3>
+      <form id="deleteForm">
+        <!-- 选项将通过JavaScript动态添加 -->
+      </form>
+      <div class="button-container">
+        <button id="cancelDelete" class="btn cancel">取消</button>
+        <button id="confirmDelete" class="btn confirm">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+    <script type="module">
+        import { init, toggleSort, searchCoin, closeSearchResult,refreshPanels,toggleAllLinks } from './script.js';
+        import { startFetching, deleteDB, updateDBStatus } from './coingecko_fetcher.js';
+
+        window.searchCoin = searchCoin;
+        window.closeSearchResult = closeSearchResult;
+        window.toggleSort = toggleSort;
+        window.addEventListener('load', async () => {
+            await init();
+            await updateDBStatus();
+        });
+        window.startFetching = startFetching;
+        window.deleteDB  = deleteDB;
+        window.updateDBStatus = updateDBStatus;
+        window.refreshPanels = refreshPanels;
+        window.toggleAllLinks = toggleAllLinks;
+    </script>
+</body>
+
+</html>
+

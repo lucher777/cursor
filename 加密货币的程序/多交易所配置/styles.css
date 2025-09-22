@@ -1,0 +1,627 @@
+/* -------------------- 基础样式 -------------------- */
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* -------------------- 按钮样式 -------------------- */
+    button {
+        transition: all 0.3s ease;
+    }
+
+    button:hover, .btn:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+    /* -------------------- 交易所面板样式 -------------------- */
+    .exchange-panel {
+        min-height: 400px;
+        transition: all 0.3s ease;
+    }
+
+    .exchange-panel.loading {
+        opacity: 0.8;
+    }
+
+    /* -------------------- 搜索结果框样式 -------------------- */
+    #search-result {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+    /* -------------------- 表格样式 -------------------- */
+    table th:nth-child(4) {
+        width: 10%;
+    }
+
+    table th {
+        font-size: 13px;
+        text-align: left;
+    }
+
+    /* -------------------- 选择容器样式 -------------------- */
+    .select-sort-container {
+        gap: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .select-sort-container select,
+    .select-sort-container input {
+        width: 100%;
+    }
+
+    /* -------------------- 空状态提示样式 -------------------- */
+    .empty-state {
+        min-height: 300px;
+        padding: 2rem;
+        color: #6b7280;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #d1d5db;
+    }
+
+    .empty-state-text {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    /* -------------------- 加载动画 -------------------- */
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+
+    /* -------------------- 状态容器 -------------------- */
+    .status-container {
+        min-height: 200px;
+    }
+
+    /* -------------------- 存储状态显示样式 - 左右分区版 -------------------- */
+    .storage-status-container {
+        font-family: 'Inter', sans-serif;
+        border: 1px solid #e8e8e8;
+        border-radius: 8px;
+        padding: 12px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin: 10px 0;
+        width: 100%;
+        max-width: 600px;
+        gap: 16px;
+    }
+
+    .storage-actions {
+        flex: 1;
+        gap: 8px;
+        min-width: 120px;
+    }
+
+    .storage-info {
+        flex: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .storage-section, .status-card {
+        padding: 10px;
+        background: #f8fafc;
+        border-radius: 6px;
+    }
+
+    .storage-section {
+        border-left: 4px solid #4299e1;
+    }
+
+    .storage-section:nth-child(2) {
+        border-left-color: #48bb78;
+    }
+
+    .status-card {
+        border-left: 3px solid #3b82f6;
+        font-size: 0.65rem;
+    }
+
+    .storage-btn, .btn {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .storage-btn {
+        background: #edf2f7;
+    }
+
+    .storage-btn-primary {
+        background: #4299e1;
+        color: white;
+    }
+
+    .btn {
+        color: white;
+    }
+
+    .btn.cancel {
+        background-color: #e53e3e;
+    }
+
+    .btn.confirm {
+        background-color: #38a169;
+    }
+
+    /* -------------------- 响应式调整 -------------------- */
+    @media (max-width: 768px) {
+        /* 主容器垂直排列 */
+        .flex-col.md\:flex-row {
+            flex-direction: column;
+        }
+    
+        /* 交易所面板改为全宽 */
+        .exchange-panel {
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }
+    
+        /* 调整对比面板宽度 */
+        .exchange-panel[data-panel="3"] {
+            width: 100%;
+            order: 3;
+        }
+    
+        /* 表格字体缩小 */
+        .exchange-rows td {
+            font-size: 0.875rem;
+            padding: 0.25rem;
+        }
+    
+        /* 隐藏对比表格的T列 */
+        .exchange-panel[data-panel="3"] th:nth-child(5),
+        .exchange-panel[data-panel="3"] td:nth-child(5) {
+            display: none;
+        }
+    
+        /* 搜索框位置调整 */
+        #search-container {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 50;
+        }
+    }
+
+    /* -------------------- 模态框样式 -------------------- */
+    .modal {
+        display: none;
+        .custom-confirm-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    
+        .custom-confirm-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+    
+        .custom-confirm-buttons {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background-color: #2d3748;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .modal h3 {
+        color: #fff;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    #deleteForm label {
+        margin-bottom: 10px;
+        color: #fff;
+    
+    }
+
+    #deleteForm input {
+        margin-right: 10px;
+    }
+
+    .button-container {
+        margin-top: 20px;
+    }
+
+    /* -------------------- 数据库状态容器样式 -------------------- */
+    #dbStatusContainer {
+        width: 300px;
+        padding: 0.25rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        max-height: 20vh;
+        overflow-y: auto;
+        margin-left: 0.5rem; 
+        padding: 1px;
+        background-color: #f9fafb; 
+        border-radius: 0.25rem; 
+    }
+
+    .status-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.25rem;
+    }
+
+    .status-card-title {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.125rem;
+        text-align: center;
+    }
+
+    .status-detail {
+        justify-content: space-between;
+        margin-bottom: 0.125rem;
+    }
+
+    .status-label, .fetch-status-text {
+        color: #6b7280;
+        font-size: 0.6rem;
+    }
+
+    .status-value {
+        color: #111827;
+        font-weight: 500;
+        font-size: 0.6rem;
+    }
+
+    .status-expired {
+        border-left-color: #ef4444;
+    }
+
+    .status-valid {
+        border-left-color: #10b981;
+    }
+
+    .underline-hover {
+        text-decoration: none;
+    }
+
+    .underline-hover:hover {
+        text-decoration: underline;
+    }
+
+    .fetch-status-container {
+        position: absolute;
+        top: 4px;
+        left: calc(4px + 100% + 1rem);
+        height: 50px;
+        min-width: 50px;
+        width: fit-content;
+        background-color: #ffe4e1;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 0 1rem;
+    }
+
+    .fetch-status-text {
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* -------------------- 调整本地存储容器样式 -------------------- */
+    .absolute.top-4.left-4 {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .btn-left, .status-right {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        float: left;
+    }
+
+    .status-right {
+        margin-left: 0.2rem; 
+    }
+
+    .full-region {
+        width: 30%;
+    }
+
+    /* -------------------- 绝对定位容器 -------------------- */
+    .absolute-storage-container {
+        position: absolute;
+        top: 20px; 
+        left: 30px; 
+    }
+
+    /* -------------------- 调整按钮样式 -------------------- */
+    .short-big-button {
+        width: 100%; 
+        font-size: 0.7rem; 
+        padding: 0.6rem 0.8rem; 
+        white-space: nowrap; 
+    }
+
+    .abs-flex{
+        display: flex;
+    }
+
+.fetch-status { 
+    background: linear-gradient(45deg, #a3f7ff, #73a6ff); /* 更浅的渐变背景 */
+    background-size: 200% 200%; 
+    padding: 10px; 
+    border-radius: 5px; 
+    border: 2px solid #80e5ff; /* 更浅的边框颜色 */
+    box-shadow: 0 0 10px #80e5ff, 0 0 20px #80e5ff inset; /* 更浅的外发光和内发光效果 */
+    color: #003cff; /* 调整文字颜色以匹配新的背景 */
+    font-size: 0.9rem; 
+    text-align: center; 
+    margin: 0 auto 15px; 
+    min-width: 20%; 
+    height: 50px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    max-width: 50%; 
+    width: 20%;
+    animation: gradientShift 3s ease infinite; 
+    transition: transform 0.3s ease; 
+}
+
+.fetch-status:hover {
+    transform: scale(1.05); 
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.exchange-panel:nth-child(1) table td, .exchange-panel:nth-child(1) table th, .exchange-panel:nth-child(2) table td, .exchange-panel:nth-child(2) table th {
+    width: 25%;
+}
+.exchange-radios label.flex input[type="radio"] {
+    display: none;
+}
+
+.exchange-radios label.flex span {
+    padding: 8px 16px; /* 减小内边距，让按钮更小 */
+    border-radius: 8px; 
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+    color: #212529; 
+    font-size: 0.8rem; /* 减小字体大小 */
+    font-weight: 500; 
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 加深阴影 */
+    border: 2px solid #ced4da; /* 添加更深的边框颜色 */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer */
+    user-select: none; /* 标准语法 */
+}
+
+.exchange-radios label.flex span:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%); 
+    transform: translateY(-2px) scale(1.05); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* 悬停时加深阴影 */
+    border-color: #adb5bd; /* 悬停时加深边框颜色 */
+}
+
+.exchange-radios label.flex input[type="radio"]:checked + span {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+    color: #ffffff; 
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4); /* 选中时加深阴影 */
+    border-color: #1d4ed8; /* 选中时加深边框颜色 */
+    transform: translateY(-2px); 
+}
+.exchang-radios-head{
+    overflow: hidden;
+}
+
+
+.exchange-count{
+    margin-left: 30px;
+    font-weight: normal;
+    font-size: 14px;
+}
+.exchange-radios > div {
+    border-bottom: 2px solid #d1d5db; /* 添加边框，颜色为浅灰色 */
+    /* border-radius: 8px; 边框圆角 */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 添加阴影 */
+    transition: all 0.3s ease; /* 添加过渡效果 */
+    padding: 10px;;
+}
+.exchange-rows td.text-center,#same-pairs-row td.text-center{
+    position: relative;
+    top: 60px;
+}
+
+
+/* 假设存在一个 style.css 文件，路径可根据实际情况调整 */
+#search-result {
+    position: relative;
+    overflow-y: auto;
+}
+
+#search-result button,
+#search-result h3 {
+    position: sticky;
+    top: -16px;
+    z-index: 1;
+    color: #666;
+    font-size: 14px;
+    padding: 10px;
+    height: 40px;
+}
+
+#search-result-content {
+    margin-top: 30px; /* 根据实际情况调整，确保内容不被标题和按钮遮挡 */
+}
+#search-result h3 {
+    background-color: #eee;
+
+}
+#search-result span{
+    float: right;
+    top: -1px;
+    color: red;
+    background: transparent;
+    cursor: pointer;
+}
+
+
+.unselectable {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer */
+    user-select: none; /* 标准语法 */
+    }
+
+    .custom-right-menu {
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 8px 0;
+        min-width: 120px;
+        z-index: 1000;
+    }
+
+    .custom-right-menu div {
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+
+    .custom-right-menu div:hover {
+        background-color: #f0f0f0;
+    }
+
+.full-open-btn {
+    background-color: #4CAF50; /* 背景颜色 */
+    border: none; /* 去除边框 */
+    color: white; /* 文字颜色 */
+    text-align: center; /* 文字居中 */
+    text-decoration: none; /* 去除下划线 */
+    display: inline-block;
+    font-size: 14px; /* 字体大小 */
+    margin: 4px 2px;
+    cursor: pointer; /* 鼠标指针样式 */
+    border-radius: 5px; /* 圆角 */
+    transition-duration: 0.4s; /* 过渡效果时长 */
+    width: 50px;
+    font-size: 12px;
+    height: 20px;
+}
+
+.full-open-btn:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 鼠标悬停时的阴影效果 */
+}
+
+.vol-num{
+    font-size: 12px;
+}
+
+
+
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.custom-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.custom-right-menu div:hover {
+        background-color: #f0f0f0;
+    }
+
+.full-open-btn {
+    background-color: #4CAF50; /* 背景颜色 */
+    border: none; /* 去除边框 */
+    color: white; /* 文字颜色 */
+    text-align: center; /* 文字居中 */
+    text-decoration: none; /* 去除下划线 */
+    display: inline-block;
+    font-size: 14px; /* 字体大小 */
+    margin: 4px 2px;
+    cursor: pointer; /* 鼠标指针样式 */
+    border-radius: 5px; /* 圆角 */
+    transition-duration: 0.4s; /* 过渡效果时长 */
+    width: 50px;
+    font-size: 12px;
+    height: 20px;
+}
+
+.full-open-btn:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 鼠标悬停时的阴影效果 */
+}
+
+.vol-num{
+    font-size: 12px;
+}

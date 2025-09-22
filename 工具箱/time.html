@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>时间工具</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/time.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html" class="logo-link"><span class="logo-icon">🧰</span><span class="logo-text">工具箱</span></a></div>
+    <nav class="nav-links" id="nav-links"></nav>
+    <div class="lang-switch">
+      <select id="lang-select"></select>
+    </div>
+  </header>
+  <main>
+    <section class="time-card simple">
+      <div class="time-title"><span class="time-icon">⏰</span><span id="time-title-text"></span></div>
+      <div class="time-main-info">
+        <span class="time-value" id="time-value">--:--:--</span>
+      </div>
+      <div class="time-date" id="time-date"></div>
+      <div class="time-lunar" id="time-lunar"></div>
+      <div class="time-desc" id="time-desc"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <span id="footer-text"></span>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/time.js"></script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单位换算</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/unit.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html" class="logo-link"><span class="logo-icon">🧰</span><span class="logo-text">工具箱</span></a></div>
+    <nav class="nav-links" id="nav-links"></nav>
+    <div class="lang-switch">
+      <select id="lang-select"></select>
+    </div>
+  </header>
+  <main>
+    <div class="unit-container">
+      <!-- 单位类型导航 -->
+      <div class="unit-nav">
+        <div class="unit-nav-item active" data-type="length-weight">长度重量单位换算</div>
+        <div class="unit-nav-item" data-type="area-volume">面积体积单位换算</div>
+        <div class="unit-nav-item" data-type="pressure-power">压力功率单位换算</div>
+        <div class="unit-nav-item" data-type="temperature">温度单位换算</div>
+        <div class="unit-nav-item" data-type="time">时间单位换算</div>
+        <div class="unit-nav-item" data-type="angle">角度单位换算</div>
+        <div class="unit-nav-item" data-type="capacitance">电容单位换算</div>
+        <div class="unit-nav-item" data-type="speed">速度单位换算</div>
+      </div>
+      
+      <!-- 长度重量单位换算 -->
+      <div class="unit-content active" id="length-weight">
+        <div class="unit-columns">
+          <!-- 长度单位 -->
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">长度单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetLength()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row">
+                  <span class="unit-name">米(m)</span>
+                  <input type="number" class="unit-input" data-unit="m" data-category="length" value="1">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">厘米(cm)</span>
+                  <input type="number" class="unit-input" data-unit="cm" data-category="length" value="100">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英寸(in)</span>
+                  <input type="number" class="unit-input" data-unit="in" data-category="length" value="39.3700787">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英尺(ft)</span>
+                  <input type="number" class="unit-input" data-unit="ft" data-category="length" value="3.2808399">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">公里(km)</span>
+                  <input type="number" class="unit-input" data-unit="km" data-category="length" value="0.001">
+                </div>
+              </div>
+              
+              <div class="unit-section-subtitle">非常用单位</div>
+              <div class="unit-table">
+                <div class="unit-row">
+                  <span class="unit-name">毫米(mm)</span>
+                  <input type="number" class="unit-input" data-unit="mm" data-category="length" value="1000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">微米(µm)</span>
+                  <input type="number" class="unit-input" data-unit="µm" data-category="length" value="1000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">里</span>
+                  <input type="number" class="unit-input" data-unit="li" data-category="length" value="0.002">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">丈</span>
+                  <input type="number" class="unit-input" data-unit="zhang" data-category="length" value="0.3">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">尺</span>
+                  <input type="number" class="unit-input" data-unit="chi" data-category="length" value="3">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">寸</span>
+                  <input type="number" class="unit-input" data-unit="cun" data-category="length" value="30">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">分</span>
+                  <input type="number" class="unit-input" data-unit="fen" data-category="length" value="300">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">厘</span>
+                  <input type="number" class="unit-input" data-unit="li_small" data-category="length" value="3000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英里(mi)</span>
+                  <input type="number" class="unit-input" data-unit="mi" data-category="length" value="0.0006214">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">弗隆(fur)</span>
+                  <input type="number" class="unit-input" data-unit="fur" data-category="length" value="0.004971">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">分米(dm)</span>
+                  <input type="number" class="unit-input" data-unit="dm" data-category="length" value="10">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">码(yd)</span>
+                  <input type="number" class="unit-input" data-unit="yd" data-category="length" value="1.0936133">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 重量单位 -->
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">重量单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetWeight()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row">
+                  <span class="unit-name">公斤(kg)</span>
+                  <input type="number" class="unit-input" data-unit="kg" data-category="weight" value="1">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">盎司(oz)</span>
+                  <input type="number" class="unit-input" data-unit="oz" data-category="weight" value="35.2739619">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">克(g)</span>
+                  <input type="number" class="unit-input" data-unit="g" data-category="weight" value="1000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">磅(lb)</span>
+                  <input type="number" class="unit-input" data-unit="lb" data-category="weight" value="2.2046226">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">吨</span>
+                  <input type="number" class="unit-input" data-unit="ton" data-category="weight" value="0.001">
+                </div>
+              </div>
+              
+              <div class="unit-section-subtitle">非常用单位</div>
+              <div class="unit-table">
+                <div class="unit-row">
+                  <span class="unit-name">市斤</span>
+                  <input type="number" class="unit-input" data-unit="shijin" data-category="weight" value="2">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">担</span>
+                  <input type="number" class="unit-input" data-unit="dan" data-category="weight" value="0.02">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">两</span>
+                  <input type="number" class="unit-input" data-unit="liang" data-category="weight" value="20">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">钱</span>
+                  <input type="number" class="unit-input" data-unit="qian" data-category="weight" value="200">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">金衡磅</span>
+                  <input type="number" class="unit-input" data-unit="troy_lb" data-category="weight" value="2.6792289">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">金衡盎司</span>
+                  <input type="number" class="unit-input" data-unit="troy_oz" data-category="weight" value="32.1507466">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英钱(dwt)</span>
+                  <input type="number" class="unit-input" data-unit="dwt" data-category="weight" value="643.0149313">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">金衡格令</span>
+                  <input type="number" class="unit-input" data-unit="troy_grain" data-category="weight" value="15432.3584">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">(英制)长吨</span>
+                  <input type="number" class="unit-input" data-unit="long_ton" data-category="weight" value="0.0009842">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">(美制)短吨</span>
+                  <input type="number" class="unit-input" data-unit="short_ton" data-category="weight" value="0.0011023">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英担(cwt)</span>
+                  <input type="number" class="unit-input" data-unit="cwt_uk" data-category="weight" value="0.0196841">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">美担(cwt)</span>
+                  <input type="number" class="unit-input" data-unit="cwt_us" data-category="weight" value="0.0220462">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英石</span>
+                  <input type="number" class="unit-input" data-unit="stone" data-category="weight" value="0.157473">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">打兰(dr)</span>
+                  <input type="number" class="unit-input" data-unit="dram" data-category="weight" value="564.3833912">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 面积体积单位换算 -->
+      <div class="unit-content" id="area-volume">
+        <div class="unit-columns">
+          <!-- 面积单位 -->
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">面积单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetArea()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row">
+                  <span class="unit-name">平方公里(km²)</span>
+                  <input type="number" class="unit-input" data-unit="km2" data-category="area" value="1">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">公顷(ha)</span>
+                  <input type="number" class="unit-input" data-unit="ha" data-category="area" value="100">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">市亩</span>
+                  <input type="number" class="unit-input" data-unit="mu" data-category="area" value="1500">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方米(m²)</span>
+                  <input type="number" class="unit-input" data-unit="m2" data-category="area" value="1000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方分米(dm²)</span>
+                  <input type="number" class="unit-input" data-unit="dm2" data-category="area" value="100000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方厘米(cm²)</span>
+                  <input type="number" class="unit-input" data-unit="cm2" data-category="area" value="10000000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方毫米(mm²)</span>
+                  <input type="number" class="unit-input" data-unit="mm2" data-category="area" value="1000000000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方英里(sq mi)</span>
+                  <input type="number" class="unit-input" data-unit="sq_mi" data-category="area" value="0.386102">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">英亩</span>
+                  <input type="number" class="unit-input" data-unit="acre" data-category="area" value="247.105">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方竿(sq rd)</span>
+                  <input type="number" class="unit-input" data-unit="sq_rd" data-category="area" value="39536.8">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方码(sq yd)</span>
+                  <input type="number" class="unit-input" data-unit="sq_yd" data-category="area" value="1195990">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方英尺(sq ft)</span>
+                  <input type="number" class="unit-input" data-unit="sq_ft" data-category="area" value="10763910">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">平方英寸(sq in)</span>
+                  <input type="number" class="unit-input" data-unit="sq_in" data-category="area" value="1550003100">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 体积单位 -->
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">体积单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetVolume()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row">
+                  <span class="unit-name">立方米(m³)</span>
+                  <input type="number" class="unit-input" data-unit="m3" data-category="volume" value="1">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">公石(hl)</span>
+                  <input type="number" class="unit-input" data-unit="hl" data-category="volume" value="10">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">十升(dal)</span>
+                  <input type="number" class="unit-input" data-unit="dal" data-category="volume" value="100">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">立方分米(dm³) = 升(l)</span>
+                  <input type="number" class="unit-input" data-unit="l" data-category="volume" value="1000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">分升(dl)</span>
+                  <input type="number" class="unit-input" data-unit="dl" data-category="volume" value="10000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">厘升(cl)</span>
+                  <input type="number" class="unit-input" data-unit="cl" data-category="volume" value="100000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">立方厘米(cm³) = 毫升(ml)</span>
+                  <input type="number" class="unit-input" data-unit="ml" data-category="volume" value="1000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">立方毫米(mm³)</span>
+                  <input type="number" class="unit-input" data-unit="mm3" data-category="volume" value="1000000000">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">桶</span>
+                  <input type="number" class="unit-input" data-unit="barrel" data-category="volume" value="6.28981">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">蒲式耳(bu)</span>
+                  <input type="number" class="unit-input" data-unit="bu" data-category="volume" value="28.3776">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">配克(pk)</span>
+                  <input type="number" class="unit-input" data-unit="pk" data-category="volume" value="113.51">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">夸脱(qt)</span>
+                  <input type="number" class="unit-input" data-unit="qt" data-category="volume" value="1056.69">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">品脱(pt)</span>
+                  <input type="number" class="unit-input" data-unit="pt" data-category="volume" value="2113.38">
+                </div>
+                <div class="unit-row">
+                  <span class="unit-name">加仑(gal)</span>
+                  <input type="number" class="unit-input" data-unit="gal" data-category="volume" value="264.172">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="unit-content" id="pressure-power">
+        <div class="unit-columns">
+          <!-- 压力单位 -->
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">压力单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetPressure()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">巴(bar)</span><input type="number" class="unit-input" data-unit="bar" data-category="pressure" value="1"></div>
+                <div class="unit-row"><span class="unit-name">千帕(kPa)</span><input type="number" class="unit-input" data-unit="kpa" data-category="pressure" value="100"></div>
+                <div class="unit-row"><span class="unit-name">百帕(hPa)</span><input type="number" class="unit-input" data-unit="hpa" data-category="pressure" value="1000"></div>
+                <div class="unit-row"><span class="unit-name">毫巴(mbar)</span><input type="number" class="unit-input" data-unit="mbar" data-category="pressure" value="1000"></div>
+                <div class="unit-row"><span class="unit-name">帕(Pa = N/m²)</span><input type="number" class="unit-input" data-unit="pa" data-category="pressure" value="100000"></div>
+                <div class="unit-row"><span class="unit-name">标准大气压(atm)</span><input type="number" class="unit-input" data-unit="atm" data-category="pressure" value="0.986923"></div>
+                <div class="unit-row"><span class="unit-name">毫米汞柱(mm Hg = Torr)</span><input type="number" class="unit-input" data-unit="torr" data-category="pressure" value="750.062"></div>
+                <div class="unit-row"><span class="unit-name">磅力/英尺²(lbf/ft²)</span><input type="number" class="unit-input" data-unit="lbf_ft2" data-category="pressure" value="2088.543"></div>
+                <div class="unit-row"><span class="unit-name">磅力/英寸²(lbf/in² = PSI)</span><input type="number" class="unit-input" data-unit="lbf_in2" data-category="pressure" value="14.5038"></div>
+                <div class="unit-row"><span class="unit-name">英寸汞柱(inHg)</span><input type="number" class="unit-input" data-unit="inHg" data-category="pressure" value="29.53"></div>
+                <div class="unit-row"><span class="unit-name">公斤力/厘米²(kgf/cm²)</span><input type="number" class="unit-input" data-unit="kgf_cm2" data-category="pressure" value="1.01972"></div>
+                <div class="unit-row"><span class="unit-name">公斤力/米²(kgf/m²)</span><input type="number" class="unit-input" data-unit="kgf_m2" data-category="pressure" value="10197.2"></div>
+                <div class="unit-row"><span class="unit-name">毫米水柱(mmH₂O)</span><input type="number" class="unit-input" data-unit="mmH2O" data-category="pressure" value="10197.2"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 功率单位 -->
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">功率单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetPower()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">瓦(W)</span><input type="number" class="unit-input" data-unit="w" data-category="power" value="1"></div>
+                <div class="unit-row"><span class="unit-name">千瓦(kW)</span><input type="number" class="unit-input" data-unit="kw" data-category="power" value="0.001"></div>
+                <div class="unit-row"><span class="unit-name">英制马力(HP)</span><input type="number" class="unit-input" data-unit="hp" data-category="power" value="0.00135962"></div>
+                <div class="unit-row"><span class="unit-name">米制马力(PS)</span><input type="number" class="unit-input" data-unit="ps" data-category="power" value="0.00135962"></div>
+                <div class="unit-row"><span class="unit-name">公斤·米/秒(kg·m/s)</span><input type="number" class="unit-input" data-unit="kgm_s" data-category="power" value="0.101972"></div>
+                <div class="unit-row"><span class="unit-name">千卡/秒(kcal/s)</span><input type="number" class="unit-input" data-unit="kcal_s" data-category="power" value="0.000238846"></div>
+                <div class="unit-row"><span class="unit-name">Btu/秒(Btu/s)</span><input type="number" class="unit-input" data-unit="btu_s" data-category="power" value="0.000947817"></div>
+                <div class="unit-row"><span class="unit-name">英尺·磅/秒(lb·ft/s)</span><input type="number" class="unit-input" data-unit="ft_lb_s" data-category="power" value="0.737562"></div>
+                <div class="unit-row"><span class="unit-name">焦瓦(J/s)</span><input type="number" class="unit-input" data-unit="j" data-category="power" value="1"></div>
+                <div class="unit-row"><span class="unit-name">牛米/秒(N·m/s)</span><input type="number" class="unit-input" data-unit="nm_s" data-category="power" value="1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- 温度单位换算 -->
+      <div class="unit-content" id="temperature">
+        <div class="unit-columns">
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">温度单位换算</h3>
+              <div class="unit-section-header">
+                <span class="unit-section-subtitle">常用单位</span>
+                <button class="unit-reset-btn" onclick="resetTemperature()">数据重置</button>
+              </div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">摄氏度(℃)</span><input type="number" class="unit-input" data-unit="c" data-category="temperature" value="0"></div>
+                <div class="unit-row"><span class="unit-name">华氏度(℉)</span><input type="number" class="unit-input" data-unit="f" data-category="temperature" value="32"></div>
+                <div class="unit-row"><span class="unit-name">开氏度(K)</span><input type="number" class="unit-input" data-unit="k" data-category="temperature" value="273.15"></div>
+                <div class="unit-row"><span class="unit-name">兰氏度(Ra)</span><input type="number" class="unit-input" data-unit="ra" data-category="temperature" value="491.67"></div>
+                <div class="unit-row"><span class="unit-name">列氏度(Re)</span><input type="number" class="unit-input" data-unit="re" data-category="temperature" value="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 时间单位换算 -->
+      <div class="unit-content" id="time">
+        <div class="unit-columns">
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">时间单位(常用)转换</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">常用单位</span><button class="unit-reset-btn" onclick="resetTime()">数据重置</button></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">秒(second)</span><input type="number" class="unit-input" data-unit="s" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">分(minute)</span><input type="number" class="unit-input" data-unit="min" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">时(hour)</span><input type="number" class="unit-input" data-unit="h" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">天(day)</span><input type="number" class="unit-input" data-unit="d" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">周(week)</span><input type="number" class="unit-input" data-unit="wk" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">月(month)</span><input type="number" class="unit-input" data-unit="mo" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">年(year)</span><input type="number" class="unit-input" data-unit="yr" data-category="time" value="0"></div>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <h3 class="unit-section-title">时间单位(扩展)转换</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">扩展单位</span></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">原子秒(Atomic second)</span><input type="number" class="unit-input" data-unit="as" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">飞秒(femtosecond)</span><input type="number" class="unit-input" data-unit="fs" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">皮秒(picosecond)</span><input type="number" class="unit-input" data-unit="ps" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">纳秒(nanosecond)</span><input type="number" class="unit-input" data-unit="ns" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">微秒(microsecond)</span><input type="number" class="unit-input" data-unit="µs" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">毫秒(millisecond)</span><input type="number" class="unit-input" data-unit="ms" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">双周(fortnight)</span><input type="number" class="unit-input" data-unit="fn" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">儒略年(julian year)</span><input type="number" class="unit-input" data-unit="jy" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">闰年(leap year)</span><input type="number" class="unit-input" data-unit="ly" data-category="time" value="0"></div>
+                <div class="unit-row"><span class="unit-name">公历年(gregorian year)</span><input type="number" class="unit-input" data-unit="gy" data-category="time" value="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 角度单位换算 -->
+      <div class="unit-content" id="angle">
+        <div class="unit-columns">
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">角度单位(常用)换算</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">常用单位</span><button class="unit-reset-btn" onclick="resetAngle()">数据重置</button></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">圆(Circles)</span><input type="number" class="unit-input" data-unit="circle" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">度(°)</span><input type="number" class="unit-input" data-unit="deg" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">弧度(Radians)</span><input type="number" class="unit-input" data-unit="rad" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">百分度(Gradians)</span><input type="number" class="unit-input" data-unit="grad" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">密位(Mils)</span><input type="number" class="unit-input" data-unit="mil" data-category="angle" value="0"></div>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <h3 class="unit-section-title">角度单位(扩展)换算</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">扩展单位</span></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">角分(Minutes)</span><input type="number" class="unit-input" data-unit="arcmin" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">四分圆(Quadrants)</span><input type="number" class="unit-input" data-unit="quad" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">圈(Revolutions)</span><input type="number" class="unit-input" data-unit="rev" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">直角(RightAngles)</span><input type="number" class="unit-input" data-unit="ra" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">角秒(Seconds)</span><input type="number" class="unit-input" data-unit="arcsec" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">六分圆(Sextants)</span><input type="number" class="unit-input" data-unit="sext" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">十二分图(Signs)</span><input type="number" class="unit-input" data-unit="sign" data-category="angle" value="0"></div>
+                <div class="unit-row"><span class="unit-name">转(Turns)</span><input type="number" class="unit-input" data-unit="turn" data-category="angle" value="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 电荷量单位换算 -->
+      <div class="unit-content" id="capacitance">
+        <div class="unit-columns">
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">电荷单位换算</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">常用单位</span><button class="unit-reset-btn" onclick="resetCapacitance()">数据重置</button></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">库仑(C)</span><input type="number" class="unit-input" data-unit="c" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">毫库仑(mC)</span><input type="number" class="unit-input" data-unit="mc" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">微库仑(µC)</span><input type="number" class="unit-input" data-unit="µc" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">纳库仑(nC)</span><input type="number" class="unit-input" data-unit="nc" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">皮库仑(pC)</span><input type="number" class="unit-input" data-unit="pc" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">阿库仑(Abcoulomb)</span><input type="number" class="unit-input" data-unit="abc" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">安培时(Ah)</span><input type="number" class="unit-input" data-unit="ah" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">安培分(Am)</span><input type="number" class="unit-input" data-unit="am" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">安培秒(As)</span><input type="number" class="unit-input" data-unit="asec" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">EMU电荷</span><input type="number" class="unit-input" data-unit="emu" data-category="capacitance" value="0"></div>
+                <div class="unit-row"><span class="unit-name">ESU电荷</span><input type="number" class="unit-input" data-unit="esu" data-category="capacitance" value="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 速度单位换算 -->
+      <div class="unit-content" id="speed">
+        <div class="unit-columns">
+          <div class="unit-column">
+            <div class="unit-section">
+              <h3 class="unit-section-title">速度单位(常用)换算</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">常用单位</span><button class="unit-reset-btn" onclick="resetSpeed()">数据重置</button></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">米/秒(m/s)</span><input type="number" class="unit-input" data-unit="mps" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">千米/小时(km/h)</span><input type="number" class="unit-input" data-unit="kmph" data-category="speed" value="0"></div>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <h3 class="unit-section-title">速度单位(扩展)换算</h3>
+              <div class="unit-section-header"><span class="unit-section-subtitle">扩展单位</span></div>
+              <div class="unit-table">
+                <div class="unit-row"><span class="unit-name">厘米/秒(cm/s)</span><input type="number" class="unit-input" data-unit="cmps" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英尺/小时(ft/h)</span><input type="number" class="unit-input" data-unit="ftph" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英尺/分钟(ft/min)</span><input type="number" class="unit-input" data-unit="ftpm" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英尺/秒(ft/s)</span><input type="number" class="unit-input" data-unit="ftps" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英寸/小时(in/h)</span><input type="number" class="unit-input" data-unit="inph" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英寸/分钟(in/min)</span><input type="number" class="unit-input" data-unit="inpm" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英寸/秒(in/s)</span><input type="number" class="unit-input" data-unit="inps" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">千米/分钟(km/min)</span><input type="number" class="unit-input" data-unit="kmpm" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">千米/秒(km/s)</span><input type="number" class="unit-input" data-unit="kmps" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">节(knots)</span><input type="number" class="unit-input" data-unit="kt" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">马赫(Mach)</span><input type="number" class="unit-input" data-unit="mach" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">光速(c)</span><input type="number" class="unit-input" data-unit="c" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">米/分(m/min)</span><input type="number" class="unit-input" data-unit="mpm" data-category="speed" value="0"></div>
+                <div class="unit-row"><span class="unit-name">英里/小时(mph)</span><input type="number" class="unit-input" data-unit="mph" data-category="speed" value="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</main>
+  <footer class="footer">
+    <span id="footer-text"></span>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/unit.js"></script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>文献分析表格生成器</title>
+  <style>
+    :root{
+      --bg:#f5f5f5;--card:#fff;--muted:#666;--line:#e8e8e8;--pri:#1890ff;--ok:#52c41a;--err:#ff4d4f;
+      --shadow:0 2px 8px rgba(0,0,0,.08);--radius:10px
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);padding:20px;min-height:100vh;color:#333}
+    .wrap{max-width:1100px;margin:auto;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .bar{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
+    .title{font-size:20px;font-weight:600}
+    .sec{padding:18px 22px;border-bottom:1px solid var(--line)}
+    .grid{display:flex;gap:12px;flex-wrap:wrap}
+    .fld{display:flex;flex-direction:column;gap:6px;min-width:180px}
+    label{font-size:13px;color:var(--muted)}
+    select,input{padding:8px 10px;border:1px solid #d9d9d9;border-radius:6px;font-size:14px;min-width:160px}
+    .btn{cursor:pointer;border:0;border-radius:8px;padding:8px 14px;font-size:14px}
+    .btn.pri{background:var(--pri);color:#fff}
+    .btn.gre{background:var(--ok);color:#fff}
+    .btn.gry{background:#d9d9d9;color:#555}
+    .btn.dan{background:var(--err);color:#fff}
+    .hint{font-size:12px;color:#999}
+    .status{margin-left:8px;font-size:13px}
+    .ok{color:var(--ok)}.bad{color:var(--err)}
+    .drop{border:2px dashed #d9d9d9;border-radius:10px;padding:28px;text-align:center;background:#fafafa;transition:.2s;cursor:pointer}
+    .drop:hover,.drop.drag{border-color:var(--pri);background:#f0f8ff}
+    .list{margin-top:12px;display:grid;gap:8px}
+    .item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#fafafa;border-radius:8px}
+    .item .meta{display:flex;gap:8px;align-items:center}
+    .item .name{font-weight:600}
+    .item .size{font-size:12px;color:#999}
+    .row{display:flex;align-items:center;gap:8px}
+    .load{display:none;text-align:center;color:#666}
+    .spin{width:18px;height:18px;border:2px solid #f3f3f3;border-top:2px solid var(--pri);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .out{background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:14px;min-height:320px;white-space:pre-wrap;line-height:1.6;overflow:auto}
+    .out table{width:100%;border-collapse:collapse;margin:10px 0 16px;background:#fff;font-size:14px}
+    .out th,.out td{border:1px solid #ddd;padding:8px 10px;text-align:left;vertical-align:top;word-break:break-word}
+    .out th{background:#f8f9fa;font-weight:600;text-align:center;white-space:nowrap}
+    .out tr:nth-child(even){background:#f9f9f9}
+    .toggle{margin:8px 0}
+    @media (max-width:768px){.grid{flex-direction:column}.fld,.fld>input,.fld>select{min-width:unset;width:100%}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="bar"><div class="title">文献分析表格生成器</div></div>
+
+    <!-- API 配置 -->
+    <section class="sec">
+      <div class="grid">
+        <div class="fld">
+          <label>提供商</label>
+          <select id="provider"><option value="dashscope">阿里云通义千问</option></select>
+        </div>
+        <div class="fld">
+          <label>模型</label>
+          <select id="model"><option value="qwen-long">Qwen Long</option></select>
+        </div>
+        <div class="fld" style="flex:1;min-width:240px">
+          <label>API Key（必填，切勿硬编码）</label>
+          <input type="password" id="apiKey" placeholder="输入 sk-..." />
+        </div>
+        <div class="row">
+          <button class="btn pri" id="btnTest">测试</button>
+          <span class="status bad" id="conn">● 未连接</span>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:6px">安全提示：请仅在本地浏览器中填写 Key，页面不会保存到服务器。</div>
+    </section>
+
+    <!-- 上传文档 -->
+    <section class="sec">
+      <div class="drop" id="drop">
+        <div>点击选择文件或拖拽到此处</div>
+        <div class="hint">支持 .txt / .doc / .docx / .pdf，可多选</div>
+        <input type="file" id="picker" accept=".txt,.doc,.docx,.pdf" multiple hidden />
+      </div>
+      <div class="list" id="list"></div>
+      <button class="btn gre" id="btnRun" disabled>开始分析生成表格</button>
+    </section>
+
+    <!-- 结果 -->
+    <section class="sec">
+      <div class="load" id="loading"><div class="spin"></div>正在分析文档，生成表格中...</div>
+      <div class="out" id="out">分析结果将在这里显示...</div>
+    </section>
+  </div>
+
+  <script>
+  (()=>{
+    const $=s=>document.querySelector(s);
+    const $$=s=>document.querySelectorAll(s);
+
+    const state={ files:[], fileIds:[], base:"https://dashscope.aliyuncs.com/compatible-mode/v1" };
+
+    // DOM refs
+    const el={
+      provider:$('#provider'), model:$('#model'), key:$('#apiKey'),
+      test:$('#btnTest'), conn:$('#conn'),
+      drop:$('#drop'), pick:$('#picker'), list:$('#list'),
+      run:$('#btnRun'), load:$('#loading'), out:$('#out')
+    };
+
+    // Helpers
+    const fmtSize=b=>{
+      if(!b) return '0 B'; const u=['B','KB','MB','GB']; let i=Math.floor(Math.log(b)/Math.log(1024));
+      return (b/Math.pow(1024,i)).toFixed(2)+' '+u[i];
+    };
+    const valid=(f)=>/\.(txt|pdf|docx?|)$/.test(f.name.toLowerCase()) || [
+      'text/plain','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ].includes(f.type);
+    const key=()=>el.key.value.trim();
+    const setConn=(ok)=>{el.conn.textContent= ok?'● 已连接':'● 未连接'; el.conn.className='status '+(ok?'ok':'bad');};
+    const setRunState=(busy)=>{el.run.disabled=busy||state.files.length===0; el.run.textContent=busy?'分析中...':'开始分析生成表格'; el.load.style.display=busy?'block':'none'};
+    const setOut=(html)=>{ // 仅保留单个 <br>
+      const cleaned=html.replace(/(<br\s*\/?\s*>)+/g,'<br>');
+      if(/<table|<tr|<td|<th/i.test(cleaned)) el.out.innerHTML=cleaned; else el.out.textContent=cleaned;
+      // 为详细表添加折叠
+      $$('.detailed-table').forEach(t=>{
+        if(t.previousElementSibling?.classList.contains('toggle')) return;
+        const btn=document.createElement('button'); btn.className='btn pri toggle'; btn.textContent='显示/隐藏详细信息';
+        btn.onclick=()=>{t.style.display = (t.style.display==='none'?'table':'none')}; t.style.display='none';
+        t.parentNode.insertBefore(btn,t);
+      });
+    };
+
+    const refreshRunBtn=()=>{ el.run.disabled = state.files.length===0; };
+
+    // File handlers
+    const addFiles=(files)=>{
+      [...files].forEach(f=>{ if(valid(f)) state.files.push(f); });
+      renderList(); refreshRunBtn();
+    };
+    const renderList=()=>{
+      el.list.innerHTML='';
+      state.files.forEach((f,i)=>{
+        const div=document.createElement('div'); div.className='item';
+        div.innerHTML=`<div class="meta"><span class="name">${f.name}</span><span class="size">(${fmtSize(f.size)})</span></div><button class="btn dan" data-i="${i}">移除</button>`;
+        el.list.appendChild(div);
+      });
+    };
+
+    // Events
+    el.drop.addEventListener('click',()=>el.pick.click());
+    el.pick.addEventListener('change',e=>addFiles(e.target.files));
+    el.drop.addEventListener('dragover',e=>{e.preventDefault(); el.drop.classList.add('drag')});
+    el.drop.addEventListener('dragleave',()=>el.drop.classList.remove('drag'));
+    el.drop.addEventListener('drop',e=>{e.preventDefault(); el.drop.classList.remove('drag'); addFiles(e.dataTransfer.files)});
+    el.list.addEventListener('click',e=>{ const i=e.target.dataset.i; if(i!==undefined){ state.files.splice(Number(i),1); renderList(); refreshRunBtn(); }});
+
+    // API
+    async function testConn(){
+      if(!key()) return alert('请先填写 API Key');
+      el.test.disabled=true; el.test.textContent='测试中...';
+      try{
+        const r=await fetch(state.base+'/models',{headers:{Authorization:'Bearer '+key()}});
+        setConn(r.ok);
+      }catch{ setConn(false) }
+      finally{ el.test.disabled=false; el.test.textContent='测试'; }
+    }
+
+    async function uploadOne(file){
+      const fd=new FormData(); fd.append('file',file); fd.append('purpose','file-extract');
+      const r=await fetch(state.base+'/files',{method:'POST',headers:{Authorization:'Bearer '+key()},body:fd});
+      if(!r.ok) throw new Error('文件上传失败：'+file.name); return (await r.json()).id;
+    }
+
+    async function uploadAll(){
+      state.fileIds = await Promise.all(state.files.map(uploadOne));
+    }
+
+    function buildPrompt(){
+      const sys=[{role:'system',content:'You are a helpful assistant specialized in academic literature analysis. Provide comprehensive per-document analysis.'},...state.fileIds.map(id=>({role:'system',content:`fileid://${id}`}))];
+      const user={role:'user',content:`请对上传的文献进行深度分析，生成两个表格：一个简易表格和详细表单。\n\n**重要说明：**\n- 无论有多少篇文献，都必须为每篇文献提供充分详细的分析\n- 不要因为文献数量多就压缩或简化内容\n- 每个字段都要认真填写，确保内容充实\n- 如果信息确实无法从文献中获取，才标注"待补充"\n\n**表格1（简易表格）**\n包含以下字段：\n1. 序号\n2. 名称\n3. 作者\n4. 期刊\n5. 被引/下载\n\n**表格2（详细表单）**\n为每篇文献生成独立的详细表单，包含以下字段：\n1. 名称：完整的文献标题\n2. 作者：所有作者姓名\n3. 文献类型：被何种数据库收录（如CSSCI、北大核心、SCI等）\n4. 来源：格式为《期刊名》年份期数页码，不包含DOI\n5. 提出的问题：列出文献中提出的主要研究问题，用序号1,2,3等标注，各问题之间用单个<br>换行\n6. 摘要：提供完整的文献摘要内容\n7. 研究思路：详细描述研究的整体思路和方法论，如有多个部分请用单个<br>分隔\n8. 文章架构：列出文章的主要章节结构和逻辑框架，各章节之间用单个<br>分隔\n9. 结论：详细阐述文献的主要结论和发现，如有多个结论请用单个<br>分隔\n10. 研究意义：分析该研究的理论意义和实践价值，分点阐述时用单个<br>换行\n11. 摘抄内容：摘录文献中的重要段落或观点（至少3-5处），每个摘抄之间用单个<br>分隔\n12. 关键图表：选择0-3个最重要的图表，并描述其内容和意义，每个图表之间用单个<br>分隔\n13. 引用：提供该文献的标准引用格式\n\n**输出要求：**\n1. 使用HTML表格格式，确保格式整齐美观\n2. 简易表格直接展示，无需额外说明\n3. 每篇文献的详细表单要单独展示，标题为"文献详细分析表 - [文献名称]"\n4. 确保每个字段的内容都充分详细，不要出现过于简短的描述\n5. 对于详细表单中的每个字段，都要提供实质性的内容\n6. 换行规则：严格只使用单个<br>进行换行，绝不连续使用<br><br>\n7. 表格第一列设置合适宽度，序号列和字段名列不换行\n8. 不要使用粗体/斜体等富文本，只允许单个<br>换行\n9. 关键图表字段列出图表标题与简要说明，各图表之间用单个<br>分隔`};
+      return [...sys,user];
+    }
+
+    async function analyze(){
+      if(!key()) return alert('请先填写 API Key');
+      if(state.files.length===0) return;
+      setRunState(true); el.out.textContent='';
+      try{
+        await uploadAll();
+        const r=await fetch(state.base+'/chat/completions',{
+          method:'POST',headers:{'Authorization':'Bearer '+key(),'Content-Type':'application/json'},
+          body:JSON.stringify({model:el.model.value,messages:buildPrompt(),stream:true,stream_options:{include_usage:true},max_tokens:8000,temperature:.3})
+        });
+        if(!r.ok) throw new Error('AI 分析请求失败');
+        const reader=r.body.getReader(); const dec=new TextDecoder(); let buf='';
+        while(true){
+          const {value,done}=await reader.read(); if(done) break; buf+=dec.decode(value,{stream:true});
+          let line; const parts=buf.split('\n'); buf=parts.pop();
+          for(line of parts){ if(!line.startsWith('data: ')) continue; const data=line.slice(6).trim(); if(data==='[DONE]') break; try{ const j=JSON.parse(data); const chunk=j.choices?.[0]?.delta?.content; if(chunk) setOut((el.out.innerHTML||el.out.textContent||'')+chunk); }catch{ /* ignore */ } }
+        }
+      }catch(e){ el.out.textContent='分析失败：'+(e?.message||e); }
+      finally{ setRunState(false); }
+    }
+
+    // Bind
+    el.test.addEventListener('click',testConn);
+    el.run.addEventListener('click',analyze);
+  })();
+  </script>
+</body>
+</html>

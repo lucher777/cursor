@@ -1,0 +1,75 @@
+.time-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 26px;
+  box-shadow: 0 8px 32px rgba(59, 183, 143, 0.18), 0 1.5px 8px rgba(59, 183, 143, 0.08);
+  max-width: 520px;
+  margin: 3.5rem auto 2rem auto;
+  padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #e6f7f1;
+  background-image: linear-gradient(135deg, #f3fdfa 60%, #e6f7f1 100%);
+}
+
+.time-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0bab64;
+  letter-spacing: 1px;
+  gap: 0.4rem;
+}
+
+.time-icon {
+  font-size: 1.5rem;
+  margin-right: 0.25rem;
+}
+
+.time-main-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-value {
+  font-size: 5.6rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #1bbd7e;
+  text-shadow: 0 3px 16px #3bb78f33;
+  margin: 0;
+}
+
+.time-date,
+.time-lunar {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #555;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.time-desc {
+  max-width: 420px;
+  font-size: 0.95rem;
+  color: #888;
+  text-align: center;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .time-card {
+    margin: 2.5rem 1rem;
+    padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+  }
+  .time-value {
+    font-size: 3.8rem;
+  }
+}

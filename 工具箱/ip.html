@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP地址查询</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/ip.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html" class="logo-link"><span class="logo-icon">🧰</span><span class="logo-text">工具箱</span></a></div>
+    <nav class="nav-links" id="nav-links"></nav>
+    <div class="lang-switch">
+      <select id="lang-select"></select>
+    </div>
+  </header>
+  <main>
+    <section class="ip-card simple">
+      <div class="ip-title"><span class="ip-icon">🔍</span><span id="ip-title-text"></span></div>
+      <div class="ip-main-info">
+        <span class="ip-label">IP</span>
+        <span class="ip-value" id="ip-value">-</span>
+      </div>
+      <div class="ip-isp" id="ip-isp"></div>
+      <div class="ip-brief-info" id="ip-brief-info"></div>
+      <div class="ip-input-area">
+        <input type="text" id="ip-input" placeholder="请输入IP地址" />
+        <button id="ip-query-btn"></button>
+      </div>
+      <div class="ip-desc" id="ip-desc"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <span id="footer-text"></span>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/ip.js"></script>
+</body>
+</html> 

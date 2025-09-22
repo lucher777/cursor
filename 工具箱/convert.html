@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>简繁体转换</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/convert.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="index.html" class="logo-link"><span class="logo-icon">🧰</span><span class="logo-text">工具箱</span></a></div>
+    <nav class="nav-links" id="nav-links"></nav>
+    <div class="lang-switch">
+      <select id="lang-select"></select>
+    </div>
+  </header>
+  <main>
+    <section class="convert-card simple">
+      <div class="convert-title" id="convert-title">转换工具</div>
+      <div class="convert-area">
+        <textarea id="convert-input" class="convert-text" placeholder="请输入文本"></textarea>
+      <div class="convert-buttons">
+        <button id="btn-to-trad" class="convert-btn primary"></button>
+        <button id="btn-to-simp" class="convert-btn secondary"></button>
+      </div>
+      <textarea id="convert-output" class="convert-text" readonly placeholder="输出"></textarea>
+      </div>
+      <div class="convert-desc" id="convert-desc"></div>
+    </section>
+  </main>
+  <footer class="footer"><span id="footer-text"></span></footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/index.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/convert.js"></script>
+</body>
+</html>

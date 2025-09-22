@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交易所价格展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+      .loading {
+            color: #17a2b8;
+            font-weight: bold;
+        }
+
+      .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+      .up-arrow {
+            color: red;
+        }
+
+      .down-arrow {
+            color: green;
+        }
+
+      .sort-btn {
+            transition: background-color 0.3s ease;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+      .sort-btn:hover {
+            filter: brightness(90%);
+        }
+
+      .highlight {
+            background-color: yellow;
+        }
+
+      .stats {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+      .stats span {
+            color: black;
+        }
+
+      .stats span.value {
+            color: red;
+        }
+
+      #sortAscBtn {
+            background-color: red;
+        }
+
+      #sortDescBtn {
+            background-color: green;
+        }
+    </style>
+    <script src="https://api.panpans.cn/coins.js"></script>
+</head>
+
+<body class="bg-gray-100 p-8">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">交易所实时价格</h2>
+    <div class="flex justify-center space-x-4 mb-4">
+        <button onclick="loadData('mexc')" id="mexcBtn"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">加载MEXC数据</button>
+        <button onclick="loadData('xt')" id="xtBtn"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">加载XT数据</button>
+        <button onclick="comparePairs()" id="compareBtn"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">比较相同交易对</button>
+    </div>
+    <div class="flex justify-center space-x-4 mb-2">
+        <input type="text" id="exclude-pair-input" placeholder="输入要排除的交易对，多个用逗号分隔"
+            class="border border-gray-300 p-2 w-1/2 rounded">
+        <button onclick="filterPairs()" id="filterBtn"
+            class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">筛选</button>
+    </div>
+    <div class="stats">
+        <span>总统计:</span>
+        <span id="total-count" class="value">0</span>
+        <span> | </span>
+        <span>首次统计:</span>
+        <span id="first-time" class="value">暂无</span>
+        <span> | </span>
+        <span>末次统计:</span>
+        <span id="last-time" class="value">暂无</span>
+    </div>
+    <div class="flex flex-col md:flex-row gap-8 mt-8">
+        <div class="bg-white p-6 rounded shadow-md w-full md:w-1/4">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">MEXC 交易所</h3>
+            <p id="mexc-count" class="text-sm text-gray-600 mb-4">交易对数量: 0 (USDT结尾: 0)</p>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">交易对</th>
+                        <th class="text-left py-2">价格</th>
+                    </tr>
+                </thead>
+                <tbody id="mexc-row"></tbody>
+            </table>
+        </div>
+        <div class="bg-white p-6 rounded shadow-md w-full md:w-1/4">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">XT 交易所</h3>
+            <p id="xt-count" class="text-sm text-gray-600 mb-4">交易对数量: 0 (_usdt结尾: 0)</p>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">交易对</th>
+                        <th class="text-left py-2">价格</th>
+                        <th class="text-left py-2">时间</th>
+                    </tr>
+                </thead>
+                <tbody id="xt-row"></tbody>
+            </table>
+        </div>
+        <div class="bg-white p-6 rounded shadow-md w-full md:w-1/4">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-4">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 md:mb-0">相同交易对</h3>
+                <div class="flex space-x-4">
+                    <button onclick="sortPairs('asc')" id="sortAscBtn"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold sort-btn rounded">
+                        <i class="fa-solid fa-arrow-up-z-a"></i> 正序排序
+                    </button>
+                    <button onclick="sortPairs('desc')" id="sortDescBtn"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold sort-btn rounded">
+                        <i class="fa-solid fa-arrow-down-z-a"></i> 倒序排序
+                    </button>
+                </div>
+            </div>
+            <p id="same-pairs-count" class="text-sm text-gray-600 mb-2">交易对数量: 0</p>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">交易对</th>
+                        <th class="text-left py-2">MEXC价格</th>
+                        <th class="text-left py-2">XT价格</th>
+                        <th class="text-left py-2">差值</th>
+                    </tr>
+                </thead>
+                <tbody id="same-pairs-row"></tbody>
+            </table>
+        </div>
+        <div class="bg-white p-6 rounded shadow-md w-full md:w-1/4">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">高差值交易对记录</h3>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">交易对</th>
+                        <th class="text-left py-2">当前差值</th>
+                        <th class="text-left py-2">TOP 10</th>
+                        <th class="text-left py-2">TOP 30</th>
+                        <th class="text-left py-2">TOP 50</th>
+                        <th class="text-left py-2">大于2%</th>
+                        <th class="text-left py-2">大于3%</th>
+                    </tr>
+                </thead>
+                <tbody id="high-diff-pairs-row"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const API_MAP = {
+            mexc: {
+                url: 'https://api.panpans.cn/mexc-api-proxy',
+                btn: document.getElementById('mexcBtn'),
+                row: document.getElementById('mexc-row'),
+                countElement: document.getElementById('mexc-count'),
+                data: []
+            },
+            xt: {
+                url: 'https://api.panpans.cn/xt-api-proxy',
+                btn: document.getElementById('xtBtn'),
+                row: document.getElementById('xt-row'),
+                countElement: document.getElementById('xt-count'),
+                data: []
+            }
+        };
+        let samePairs = [];
+        let allHighDiffPairs = [];
+        const DIFF_THRESHOLD = 0.01;
+        let totalCount = parseInt(sessionStorage.getItem('totalCount')) || 0;
+        let firstTime = sessionStorage.getItem('firstTime') || null;
+        let lastTime = sessionStorage.getItem('lastTime') || null;
+
+        window.addEventListener('load', () => {
+            if (typeof excludedCoins!== 'undefined') {
+                const excludeInput = document.getElementById('exclude-pair-input');
+                excludeInput.value = excludedCoins.join(', ');
+            }
+            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('first-time').textContent = firstTime? firstTime : '暂无';
+            document.getElementById('last-time').textContent = lastTime? lastTime : '暂无';
+        });
+
+        async function loadData(exchange) {
+            const target = API_MAP[exchange];
+            if (!target) return;
+
+            try {
+                if (exchange === 'mexc') {
+                    target.row.innerHTML = '<tr><td colspan="2"><span class="loading">⏳ 加载中...</span></td></tr>';
+                } else {
+                    target.row.innerHTML = '<tr><td colspan="3"><span class="loading">⏳ 加载中...</span></td></tr>';
+                }
+                target.btn.disabled = true;
+
+                const response = await fetch(target.url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                let totalCount = 0;
+                let specificEndingCount = 0;
+
+                if (exchange === 'mexc' && Array.isArray(data)) {
+                    totalCount = data.length;
+                    specificEndingCount = data.filter(item => item.symbol.endsWith('USDT')).length;
+                    if (totalCount > 0) {
+                        target.row.innerHTML = '';
+                        data.forEach(item => {
+                            updateRow(target.row, item.symbol, item.price, exchange);
+                        });
+                    } else {
+                        throw new Error('无数据');
+                    }
+                    target.data = data;
+                } else if (exchange === 'xt' && data.result && Array.isArray(data.result)) {
+                    totalCount = data.result.length;
+                    specificEndingCount = data.result.filter(item => item.s.endsWith('_usdt')).length;
+                    if (totalCount > 0) {
+                        target.row.innerHTML = '';
+                        data.result.forEach(item => {
+                            const date = new Date(item.t);
+                            const timeWithoutYear = `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                            updateRow(target.row, item.s, item.p, exchange, timeWithoutYear);
+                        });
+                    } else {
+                        throw new Error('XT接口无数据');
+                    }
+                    target.data = data.result;
+                } else {
+                    throw new Error('无效数据格式');
+                }
+
+                target.countElement.textContent = `交易对数量: ${totalCount} (${exchange === 'mexc'? 'USDT' : '_usdt'}结尾: ${specificEndingCount})`;
+
+            } catch (error) {
+                if (exchange === 'mexc') {
+                    target.row.innerHTML = `<tr><td colspan="2"><span class="error">❌ 错误: ${error.message}</span></td></tr>`;
+                } else {
+                    target.row.innerHTML = `<tr><td colspan="3"><span class="error">❌ 错误: ${error.message}</span></td></tr>`;
+                }
+                target.countElement.textContent = `交易对数量: 0 (${exchange === 'mexc'? 'USDT' : '_usdt'}结尾: 0)`;
+            } finally {
+                target.btn.disabled = false;
+            }
+        }
+
+        function updateRow(row, symbol, price, exchange, time = '') {
+            const newRow = document.createElement('tr');
+            if (exchange === 'mexc') {
+                newRow.innerHTML = `
+                    <td>${symbol}</td>
+                    <td>${price}</td>
+                `;
+            } else {
+                newRow.innerHTML = `
+                    <td>${symbol}</td>
+                    <td>${price}</td>
+                    <td>${time}</td>
+                `;
+            }
+            row.appendChild(newRow);
+        }
+
+        function comparePairs() {
+            const mexcData = API_MAP.mexc.data;
+            const xtData = API_MAP.xt.data;
+            const samePairsRow = document.getElementById('same-pairs-row');
+            const samePairsCountElement = document.getElementById('same-pairs-count');
+            samePairsRow.innerHTML = '';
+
+            if (mexcData.length === 0 || xtData.length === 0) {
+                const errorRow = document.createElement('tr');
+                errorRow.innerHTML = `<td colspan="4"><span class="error">请先加载MEXC和XT的数据</span></td>`;
+                samePairsRow.appendChild(errorRow);
+                samePairsCountElement.textContent = `交易对数量: 0`;
+                return;
+            }
+
+            samePairs = [];
+            mexcData.forEach(mexcItem => {
+                const mexcSymbol = mexcItem.symbol.toLowerCase().replace('usdt', '_usdt');
+                const xtMatch = xtData.find(xtItem => xtItem.s === mexcSymbol);
+                if (xtMatch) {
+                    const mexcPrice = parseFloat(mexcItem.price);
+                    const xtPrice = parseFloat(xtMatch.p);
+                    const priceDiff = (Math.max(mexcPrice, xtPrice) - Math.min(mexcPrice, xtPrice)) / Math.min(mexcPrice, xtPrice);
+                    samePairs.push({
+                        symbol: mexcSymbol.replace('_usdt', ''),
+                        mexcPrice: mexcPrice,
+                        xtPrice: xtPrice,
+                        priceDiff: priceDiff
+                    });
+                }
+            });
+
+            const sortedSamePairs = samePairs.sort((a, b) => b.priceDiff - a.priceDiff);
+            const filteredSamePairs = filterPairsInternal();
+            const currentHighDiffPairs = filteredSamePairs.filter(pair => pair.priceDiff >= DIFF_THRESHOLD);
+
+            const sessionStats = JSON.parse(sessionStorage.getItem('highDiffStats')) || {};
+            currentHighDiffPairs.forEach((pair, index) => {
+                const symbol = pair.symbol;
+                if (!sessionStats[symbol]) {
+                    sessionStats[symbol] = {
+                        top10: 0,
+                        top30: 0,
+                        top50: 0,
+                        over2: 0,
+                        over3: 0
+                    };
+                }
+                if (index < 10) sessionStats[symbol].top10++;
+                if (index < 30) sessionStats[symbol].top30++;
+                if (index < 50) sessionStats[symbol].top50++;
+                if (pair.priceDiff > 0.02) sessionStats[symbol].over2++;
+                if (pair.priceDiff > 0.03) sessionStats[symbol].over3++;
+            });
+            sessionStorage.setItem('highDiffStats', JSON.stringify(sessionStats));
+
+            allHighDiffPairs.push(currentHighDiffPairs);
+
+            totalCount++;
+            const now = new Date().toLocaleString();
+            if (!firstTime) {
+                firstTime = now;
+            }
+            lastTime = now;
+
+            sessionStorage.setItem('totalCount', totalCount);
+            sessionStorage.setItem('firstTime', firstTime);
+            sessionStorage.setItem('lastTime', lastTime);
+
+            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('first-time').textContent = firstTime;
+            document.getElementById('last-time').textContent = lastTime;
+
+            sortPairs('desc');
+            displayHighDiffPairs();
+        }
+
+        function displaySamePairs(pairs) {
+            const samePairsRow = document.getElementById('same-pairs-row');
+            const excludeInput = document.getElementById('exclude-pair-input');
+            const excludePairs = excludeInput.value.split(',').map(pair => pair.trim().toLowerCase());
+            samePairsRow.innerHTML = '';
+            const filteredPairs = pairs.filter(pair =>!excludePairs.includes(pair.symbol));
+            filteredPairs.forEach(pair => {
+                const newRow = document.createElement('tr');
+                let mexcPriceCell = `<td>${pair.mexcPrice}</td>`;
+                let xtPriceCell = `<td>${pair.xtPrice}</td>`;
+                if (pair.mexcPrice > pair.xtPrice) {
+                    mexcPriceCell = `<td><span class="up-arrow"><i class="fa-solid fa-arrow-up"></i></span> ${pair.mexcPrice}</td>`;
+                    xtPriceCell = `<td><span class="down-arrow"><i class="fa-solid fa-arrow-down"></i></span> ${pair.xtPrice}</td>`;
+                } else if (pair.mexcPrice < pair.xtPrice) {
+                    mexcPriceCell = `<td><span class="down-arrow"><i class="fa-solid fa-arrow-down"></i></span> ${pair.mexcPrice}</td>`;
+                    xtPriceCell = `<td><span class="up-arrow"><i class="fa-solid fa-arrow-up"></i></span> ${pair.xtPrice}</td>`;
+                }
+                newRow.innerHTML = `
+                    <td>${pair.symbol}</td>
+                    ${mexcPriceCell}
+                    ${xtPriceCell}
+                    <td>${(pair.priceDiff * 100).toFixed(2)}%</td>
+                `;
+                samePairsRow.appendChild(newRow);
+            });
+            const samePairsCountElement = document.getElementById('same-pairs-count');
+            samePairsCountElement.textContent = `交易对数量: ${filteredPairs.length}`;
+        }
+
+        function displayHighDiffPairs() {
+            const highDiffPairsRow = document.getElementById('high-diff-pairs-row');
+            highDiffPairsRow.innerHTML = '';
+            const allPairs = allHighDiffPairs.flat();
+            const uniquePairs = {};
+            allPairs.forEach(pair => {
+                uniquePairs[pair.symbol] = pair;
+            });
+
+            const sessionStats = JSON.parse(sessionStorage.getItem('highDiffStats')) || {};
+            Object.keys(uniquePairs).forEach(symbol => {
+                const pair = uniquePairs[symbol];
+                const stats = sessionStats[symbol];
+                const newRow = document.createElement('tr');
+                let mexcPriceCell = `<td>${pair.mexcPrice}</td>`;
+                let xtPriceCell = `<td>${pair.xtPrice}</td>`;
+                if (pair.mexcPrice > pair.xtPrice) {
+                    mexcPriceCell = `<td><span class="up-arrow"><i class="fa-solid fa-arrow-up"></i></span> ${pair.mexcPrice}</td>`;
+                    xtPriceCell = `<td><span class="down-arrow"><i class="fa-solid fa-arrow-down"></i></span> ${pair.xtPrice}</td>`;
+                } else if (pair.mexcPrice < pair.xtPrice) {
+                    mexcPriceCell = `<td><span class="down-arrow"><i class="fa-solid fa-arrow-down"></i></span> ${pair.mexcPrice}</td>`;
+                    xtPriceCell = `<td><span class="up-arrow"><i class="fa-solid fa-arrow-up"></i></span> ${pair.xtPrice}</td>`;
+                }
+                newRow.innerHTML = `
+                    <td>${pair.symbol}</td>
+                    <td>${(pair.priceDiff * 100).toFixed(2)}%</td>
+                    <td>${stats.top10}</td>
+                    <td>${stats.top30}</td>
+                    <td>${stats.top50}</td>
+                    <td>${stats.over2}</td>
+                    <td>${stats.over3}</td>
+                `;
+                highDiffPairsRow.appendChild(newRow);
+            });
+        }
+
+        function sortPairs(order) {
+            const sortedPairs = [...samePairs].sort((a, b) => {
+                if (order === 'asc') {
+                    return a.priceDiff - b.priceDiff;
+                } else {
+                    return b.priceDiff - a.priceDiff;
+                }
+            });
+            displaySamePairs(sortedPairs);
+        }
+
+        function filterPairs() {
+            sortPairs('desc');
+            const filteredSamePairs = filterPairsInternal();
+            displaySamePairs(filteredSamePairs);
+        }
+
+        function filterPairsInternal() {
+            const excludeInput = document.getElementById('exclude-pair-input');
+            const excludePairs = excludeInput.value.split(',').map(pair => pair.trim().toLowerCase());
+            return samePairs.filter(pair =>!excludePairs.includes(pair.symbol));
+        }
+    </script>
+</body>
+
+</html>    
