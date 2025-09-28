@@ -2,7 +2,7 @@
 let navItems = [
   {
     id: 1,
-    title: "虚拟币跨交易所收益计算器",
+    title: "不同交易所收益计算器",
     url: "https://bz.panpans.cn",
     logo: "GH"
   },
@@ -14,7 +14,7 @@ let navItems = [
   },
   {
     id: 3,
-    title: "多交易所实时价格",
+    title: "多交易所价格展示",
     url: "https://api.panpans.cn/",
     logo: "SO"
   },
@@ -22,7 +22,25 @@ let navItems = [
     id: 4,
     title: "C2C多币种计算器",
     url: "https://otc.panpans.cn/",
-    logo: "MDN"
+    logo: "C2C"
+  },,
+  {
+    id: 5,
+    title: "mai.panpans.cn",
+    url: "https://mai.panpans.cn/",
+    logo: "mai"
+  },,
+  {
+    id: 6,
+    title: "citespace",
+    url: "https://citespace.panpans.cn/",
+    logo: "CT"
+  },,
+  {
+    id: 7,
+    title: "论文",
+    url: "https://paper.panpans.cn/",
+    logo: "PR"
   }
 ];
 
