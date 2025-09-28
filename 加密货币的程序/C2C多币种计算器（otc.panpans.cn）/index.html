@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C2C多币种计算器</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #008CBA; --primary-hover: #006080; --background-color: #f4f9f9; --card-background: #fff;
+            --text-color: #333; --border-color: #b2ebf2; --header-bg: #e0f7fa; --info-text: #757575;
+            --border-radius: 15px; --transition: 0.3s ease;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Quicksand', sans-serif; background-color: var(--background-color); color: var(--text-color);
+            animation: fadeIn 1s ease-in-out; font-weight: 700; margin: 0; padding: 0; display: flex;
+            justify-content: center; align-items: center; min-height: 100vh;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInInfo {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 1rem; background-color: var(--card-background);
+            border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1s ease-in-out; position: relative;
+        }
+        .page-title {
+            font-size: 2rem; font-weight: 700; margin-bottom: 1rem; text-align: center;
+            color: var(--primary-color); text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .principal-section { margin-bottom: 1rem; text-align: center; }
+        .principal-section label { font-size: 1.25rem; }
+        .table-container { display: flex; flex-direction: column; overflow-x: auto; }
+        .table-header {
+            display: flex; background-color: var(--header-bg); color: var(--primary-color);
+            font-weight: 600; font-size: 1rem; border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        .table-header-item { padding: 1rem; flex: 1; text-align: center; }
+        .table-row {
+            display: flex; transition: background-color var(--transition);
+            border-bottom: 2px solid var(--header-bg);
+        }
+        .table-row:nth-child(even) { background-color: rgba(241, 248, 233, 0.5); }
+        .table-row:hover { filter: brightness(0.9); }
+        .table-cell {
+            padding: 1rem; flex: 1; text-align: center; font-size: 0.9rem;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .input-field {
+            width: 100%; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px;
+            font-size: 1rem; transition: border-color var(--transition), transform var(--transition);
+            background-color: var(--card-background); color: var(--text-color);
+            font-family: 'Quicksand', sans-serif; font-weight: 700;
+        }
+        .input-field:focus { border-color: var(--primary-color); outline: none; transform: scale(1.05); }
+        .calculate-btn {
+            display: block; width: 100%; padding: 1rem; background-color: var(--primary-color);
+            color: white; border: none; border-radius: var(--border-radius); font-size: 1.2rem;
+            cursor: pointer; transition: background-color var(--transition), transform var(--transition);
+            margin-top: 1rem; font-family: 'Quicksand', sans-serif; font-weight: 700;
+        }
+        .calculate-btn:hover { background-color: var(--primary-hover); transform: scale(1.02); }
+        .info-text {
+            font-size: 0.8rem; color: var(--info-text); margin-top: 0.5rem;
+            min-height: 1.2em; animation: fadeInInfo 0.5s ease-in-out;
+        }
+        .api-price { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+        .api-price input { width: 100%; margin-bottom: 0.5rem; }
+        .currency-label {
+            font-size: 1.1rem; font-weight: bold; color: var(--primary-color);
+            margin-top: 0.3rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .loading-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.8); display: flex; justify-content: center;
+            align-items: center; border-radius: var(--border-radius); z-index: 10;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1); border-left-color: var(--primary-color);
+            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;
+        }
+        .currency-usdt { background-color: #c2f0c2; } .currency-btc { background-color: #ffdab9; }
+        .currency-eth { background-color: #b3d9ff; } .currency-bnb { background-color: #a6e1fa; }
+        .currency-sol { background-color: #ffffb3; } .currency-doge { background-color: #d1e0e0; }
+        .currency-trx { background-color: #ffcccc; }
+        @media (max-width: 768px) {
+            .table-header, .table-row { flex-wrap: wrap; }
+            .table-header-item, .table-cell { flex-basis: 50%; }
+        }
+        @media (max-width: 480px) {
+            .table-header-item, .table-cell { flex-basis: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading-overlay" id="loading">
+            <div class="loading-spinner"></div>
+        </div>
+        <h1 class="page-title">C2C多币种计算器</h1>
+        <div class="principal-section flex flex-col items-center">
+            <label for="principal" class="block text-sm font-medium text-gray-700 mb-1">本金 (¥):</label>
+            <input type="number" id="principal" value="10000" required
+                class="input-field mt-1 block w-70% px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-header-item">币种 ($)</div>
+                <div class="table-header-item">购买价格 (¥)</div>
+                <div class="table-header-item">卖出价格 (¥)</div>
+                <div class="table-header-item">计算收益 (¥)</div>
+            </div>
+            <div id="currency-rows"></div>
+        </div>
+        <button class="calculate-btn" onclick="app.calculateProfit()">计算收益</button>
+    </div>
+    <script>
+        const app = {
+            config: {
+                currencies: [
+                    { id: 'usdt', symbol: 'USDT', decimals: 2 }, { id: 'btc', symbol: 'BTC', decimals: 2 },
+                    { id: 'eth', symbol: 'ETH', decimals: 2 }, { id: 'bnb', symbol: 'BNB', decimals: 2 },
+                    { id: 'sol', symbol: 'SOL', decimals: 2 }, { id: 'doge', symbol: 'DOGE', decimals: 5 },
+                    { id: 'trx', symbol: 'TRX', decimals: 5 }
+                ],
+                apiUrl: 'https://min-api.cryptocompare.com/data/pricemulti',
+                defaultPrincipal: 10000
+            },
+            state: { currentPrices: {}, loading: false },
+            elements: { loading: null, currencyRows: null, principal: null },
+            init() {
+                this.cacheElements();
+                this.generateCurrencyRows();
+                this.fetchPrices();
+            },
+            cacheElements() {
+                this.elements.loading = document.getElementById('loading');
+                this.elements.currencyRows = document.getElementById('currency-rows');
+                this.elements.principal = document.getElementById('principal');
+            },
+            generateCurrencyRows() {
+                const rowsHTML = this.config.currencies.map(currency => `
+                    <div class="table-row currency-${currency.id}">
+                        <div class="table-cell">
+                            <div class="api-price">
+                                <input type="number" id="${currency.id}-api-price" class="input-field">
+                                <span class="currency-label">${currency.symbol}</span>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <input type="number" id="${currency.id}-buy" required class="input-field">
+                            <div class="info-text" id="${currency.id}-buy-info">数量: -，购买汇率: -</div>
+                        </div>
+                        <div class="table-cell">
+                            <input type="number" id="${currency.id}-sell" required class="input-field">
+                            <div class="info-text" id="${currency.id}-sell-info">卖出汇率: -</div>
+                        </div>
+                        <div class="table-cell">
+                            <p id="${currency.id}-profit">-</p>
+                        </div>
+                    </div>
+                `).join('');
+                this.elements.currencyRows.innerHTML = rowsHTML;
+            },
+            setLoadingState(isLoading) {
+                this.state.loading = isLoading;
+                this.elements.loading.style.display = isLoading ? 'flex' : 'none';
+            },
+            async fetchPrices() {
+                const symbols = this.config.currencies.map(c => c.symbol).join(',');
+                try {
+                    this.setLoadingState(true);
+                    const response = await fetch(`${this.config.apiUrl}?fsyms=${symbols}&tsyms=USD`);
+                    if (!response.ok) throw new Error(`HTTP错误! status: ${response.status}`);
+                    const data = await response.json();
+                    this.updatePrices(data);
+                } catch (error) {
+                    console.error('获取价格时出错:', error);
+                    this.showError('获取价格失败，请稍后重试');
+                } finally {
+                    this.setLoadingState(false);
+                }
+            },
+            updatePrices(priceData) {
+                this.config.currencies.forEach(currency => {
+                    const price = priceData[currency.symbol]?.USD;
+                    if (price) {
+                        this.state.currentPrices[currency.id] = price;
+                        const inputElement = document.getElementById(`${currency.id}-api-price`);
+                        if (inputElement) inputElement.value = price.toFixed(currency.decimals);
+                        const buyInputElement = document.getElementById(`${currency.id}-buy`);
+                        if (buyInputElement) buyInputElement.value = '';
+                    }
+                });
+            },
+            showError(message) { alert(message); },
+            formatValue(value, decimals = 2) { return isNaN(value) ? '-' : value.toFixed(decimals); },
+            getInputValue(elementId) {
+                const element = document.getElementById(elementId);
+                return element ? parseFloat(element.value) || 0 : 0;
+            },
+            setElementContent(elementId, content) {
+                const element = document.getElementById(elementId);
+                if (element) element.innerHTML = content;
+            },
+            calculateCurrencyProfit(currency, principal) {
+                const buyPrice = this.getInputValue(`${currency.id}-buy`);
+                const sellPrice = this.getInputValue(`${currency.id}-sell`);
+                const apiPrice = this.getInputValue(`${currency.id}-api-price`) || this.state.currentPrices[currency.id];
+                if (!buyPrice || !sellPrice || !apiPrice) {
+                    return { amount: 0, profit: 0, buyRate: 0, sellRate: 0 };
+                }
+                const amount = principal / buyPrice;
+                const profit = amount * sellPrice - principal;
+                const buyRate = buyPrice / apiPrice;
+                const sellRate = sellPrice / apiPrice;
+                return { amount, profit, buyRate, sellRate };
+            },
+            updateCurrencyDisplay(currency, calculation) {
+                const { amount, profit, buyRate, sellRate } = calculation;
+                this.setElementContent(`${currency.id}-buy-info`, `数量: ${this.formatValue(amount)}，购买汇率: ${this.formatValue(buyRate)}`);
+                this.setElementContent(`${currency.id}-sell-info`, `卖出汇率: ${this.formatValue(sellRate)}`);
+                this.setElementContent(`${currency.id}-profit`, this.formatValue(profit));
+            },
+            calculateProfit() {
+                const principal = this.getInputValue('principal');
+                if (!principal) { this.showError('请输入有效的本金金额'); return; }
+                this.config.currencies.forEach(currency => {
+                    const calculation = this.calculateCurrencyProfit(currency, principal);
+                    this.updateCurrencyDisplay(currency, calculation);
+                });
+            }
+        };
+        document.addEventListener('DOMContentLoaded', () => { app.init(); });
+        function calculateProfit() { app.calculateProfit(); }
+    </script>
+</body>
+</html>

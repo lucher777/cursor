@@ -16,46 +16,10 @@ function getLocalStorageItem(key) {
 // 工具函数
 const formatUtils = {
 
-  // 获取最小收益率（从本地存储或使用默认值）
-  get MIN_RETURN() {
-    const stored = localStorage.getItem('minReturn');
-    return stored ? parseFloat(stored) : 0.001;
-  },
 
-  // 设置最小收益率
-  set MIN_RETURN(value) {
-    localStorage.setItem('minReturn', value.toString());
-  },
+  // 如果利润这个价格就不显示，
+  MIN_RETURN: 0.001,
 
-  // 获取最小收益率（用于显示）
-  getMinReturn() {
-    return this.MIN_RETURN;
-  },
-
-  // 设置最小收益率
-  setMinReturn(value) {
-    this.MIN_RETURN = value;
-  },
-
-  // 获取24小时成交量
-  get VOL_24H() {
-    return parseFloat(localStorage.getItem('vol24h') || '200000');
-  },
-
-  // 设置24小时成交量
-  set VOL_24H(value) {
-    localStorage.setItem('vol24h', value.toString());
-  },
-
-  // 获取24小时成交量（用于显示）
-  getVol24h() {
-    return this.VOL_24H;
-  },
-
-  // 设置24小时成交量
-  setVol24h(value) {
-    this.VOL_24H = value;
-  },
 
   formatSymbol(rawSymbol) {
     const sortedBaseCoins = [...BASECOINS].sort((a, b) => b.length - a.length);

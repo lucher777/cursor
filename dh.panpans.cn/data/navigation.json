@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "GitHub",
+    "url": "https://github.com",
+    "logo": "GH"
+  },
+  {
+    "id": 2,
+    "title": "Google",
+    "url": "https://google.com",
+    "logo": "G"
+  },
+  {
+    "id": 3,
+    "title": "Stack Overflow",
+    "url": "https://stackoverflow.com",
+    "logo": "SO"
+  },
+  {
+    "id": 4,
+    "title": "MDN Web Docs",
+    "url": "https://developer.mozilla.org",
+    "logo": "MDN"
+  }
+]

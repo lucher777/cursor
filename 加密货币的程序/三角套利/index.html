@@ -27,64 +27,13 @@
     </div>
 
 
-            <div class="flex justify-center space-x-4 mb-2">
-            <!-- 收益率筛选输入框 -->
-            <div class="flex items-center space-x-2">
-                <label for="min-return-input" class="text-sm font-medium text-gray-700">最小收益率:</label>
-                <input 
-                    type="number" 
-                    id="min-return-input" 
-                    min="0" 
-                    max="100" 
-                    step="0.1" 
-                    value="0.1" 
-                    class="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="0.1"
-                >
-                <span class="text-sm text-gray-500">%</span>
-                <button 
-                    id="save-return-btn" 
-                    onclick="saveMinReturn()"
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm">
-                    保存
-                </button>
-            </div>
-            <!-- 24小时成交量筛选输入框 -->
-            <div class="flex items-center space-x-2">
-                <label for="vol-24h-input" class="text-sm font-medium text-gray-700">24小时成交量:</label>
-                <input 
-                    type="number" 
-                    id="vol-24h-input" 
-                    min="0" 
-                    step="1000" 
-                    value="200000" 
-                    class="w-24 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="200000"
-                >
-                <span class="text-sm text-gray-500">USDT</span>
-                <button 
-                    id="save-vol-btn" 
-                    onclick="saveVol24h()"
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm">
-                    保存
-                </button>
-            </div>
-            <!-- 刷新按钮 -->
-            <button id="refresh-button" onclick="refreshPanels()"
-                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                刷新数据
-            </button>
-            <!-- API接口检测按钮 -->
-            <a href="api_test.html" target="_blank"
-                class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-cog mr-2"></i>API检测
-            </a>
-            <!-- 交易历史按钮 -->
-            <a href="trade_history.html" target="_blank"
-                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-history mr-2"></i>交易历史
-            </a>
-        </div>
+    <div class="flex justify-center space-x-4 mb-2">
+        <!-- 替换筛选输入框和按钮为刷新按钮 -->
+        <button id="refresh-button" onclick="refreshPanels()"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            刷新数据
+        </button>
+    </div>
 
 
     <div class="stats text-center mb-8">
@@ -94,11 +43,11 @@
     <!-- 修改交易所选择部分 -->
     <div class="flex flex-col md:flex-row gap-8">
         <!-- 面板1 -->
-        <div class="exchange-panel exchange-panel1 bg-white p-6 rounded shadow-md w-[20%]" data-panel="1">
+        <div class="exchange-panel exchange-panel1 bg-white p-6 rounded shadow-md w-[17%]" data-panel="1">
             <!-- 单选框选择区域 -->
             <div class="exchange-radios">
 
-                <h4 class="">交易所:
+                <h4 class="">选择交易所1:
                     <span class="exchange-count" id="arbitrage1-count">
                         <span></span>
                     </span>
@@ -135,12 +84,10 @@
             </table>
         </div>
 
-        <div class="exchange-panel exchange-panel2 bg-white p-6 rounded shadow-md w-[80%]" data-panel="2">
+        <div class="exchange-panel exchange-panel2 bg-white p-6 rounded shadow-md w-[83%]" data-panel="2">
             <h4 class="font-bold mb-2">信息面板
-                <span id="exchang-4panel-count" class="exchange-count">
-                    <span id="arbitrage-count" class="text-sm text-gray-600"></span>
-
-                </span>
+                <span id="exchang-4panel-count" class="exchange-count"></span>
+                <span id="arbitrage-count" class="text-sm text-gray-600"></span>
             </h4>
             <table class="w-full">
                 <thead>
@@ -197,36 +144,17 @@
 
     <script type="module">
         import {getCoinPrices} from './coingecko_fetcher.js';
-        import { init, toggleSort, refreshPanels, toggleAllLinks, saveMinReturn, saveVol24h } from './script.js';
-        import { QuickTrade } from './quick_trade.js';
-
-        // 初始化一键交易功能
-        let quickTradeInstance = null;
+        import { init, toggleSort, refreshPanels,toggleAllLinks } from './script.js';
 
         window.toggleSort = toggleSort;
         window.addEventListener('load', async () => {
             await getCoinPrices();
+
             await init();
-            
-            // 初始化一键交易
-            quickTradeInstance = new QuickTrade();
         });
-        
         window.getCoinPrices = getCoinPrices;
         window.refreshPanels = refreshPanels;
         window.toggleAllLinks = toggleAllLinks;
-        window.saveMinReturn = saveMinReturn;
-        window.saveVol24h = saveVol24h;
-        
-        // 一键交易执行函数
-        window.executeQuickTrade = function(button) {
-            if (quickTradeInstance) {
-                const arbitrageData = JSON.parse(button.dataset.arbitrage);
-                quickTradeInstance.executeArbitrage(arbitrageData);
-            } else {
-                alert('一键交易功能未初始化，请刷新页面重试');
-            }
-        };
 
     </script>
 </body>

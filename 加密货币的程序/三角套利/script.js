@@ -116,16 +116,11 @@ const comparisonRenderer = {
   displayComparison4: (pairs) => {
     domUtils.setLoading(panels[1], true);
     
-    // 获取当前设置的最小收益率（转换为小数）
-    const minReturnInput = document.getElementById('min-return-input');
-    const minReturnPercent = parseFloat(minReturnInput.value) || 0.1;
-    const minReturnDecimal = minReturnPercent / 100;
-    
     const combinations = formatUtils.findTriangularArbitrageOpportunities(pairs, true)
-      .filter(c => Math.abs(c.paths.path1?.return || 0) >= minReturnDecimal);
+      .filter(c => Math.abs(c.paths.path1?.return || 0) >= formatUtils.MIN_RETURN);
 
     document.getElementById('arbitrage-count').textContent = 
-      `当前套利组合：${combinations.length}个 (最小收益率: ${minReturnPercent}%)`;
+      `当前套利组合：${combinations.length}个`;
 
     const container = document.getElementById('exchang-4panel-container');
     container.innerHTML = combinations.length ? 
@@ -152,39 +147,16 @@ const comparisonRenderer = {
         <div class="profit-value">${(value.return * 100).toFixed(4)}%</div>
       </td>` : '').join('');
 
-    // 过滤有效的链接
-    const validLinks = c.list
-      .map(t => t?.symbolLink)
-      .filter(link => link && link.trim() !== '');
-
-    // 准备套利数据用于一键交易
-    const arbitrageData = {
-      pair1: c.list[0]?.symbol || '',
-      pair2: c.list[1]?.symbol || '',
-      pair3: c.list[2]?.symbol || '',
-      profit1: c.paths.path1?.return || 0,
-      profit2: c.paths.path2?.return || 0,
-      path1: c.paths.path1?.key || '',
-      path2: c.paths.path2?.key || ''
-    };
-
     return templateEngine.tableRow([
       `<td class="row-index">${i + 1}</td>`,
       tradingSteps,
       paths,
       `<td class="action-cell">
-        <div class="flex space-x-2">
-          <div class="full-open-btn" 
-               onclick="toggleAllLinks(this)"
-               data-links="${validLinks.join(',')}"
-               data-state="closed">
-            全开
-          </div>
-          <button class="quick-trade-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs"
-                  data-arbitrage='${JSON.stringify(arbitrageData)}'
-                  onclick="executeQuickTrade(this)">
-            <i class="fas fa-bolt mr-1"></i>一键交易
-          </button>
+        <div class="full-open-btn" 
+             onclick="toggleAllLinks(this)"
+             data-links="${c.list.map(t => t.symbolLink).join(',')}"
+             data-state="closed">
+          全开
         </div>
       </td>`
     ]);
@@ -237,94 +209,7 @@ const eventHandlers = {
 // 初始化 -------------------------------------------------------
 const PANEL_MAP = panelManager.initPanels();
 
-// 收益率管理功能
-const returnManager = {
-  // 保存最小收益率
-  saveMinReturn: () => {
-    const input = document.getElementById('min-return-input');
-    const value = parseFloat(input.value);
-    
-    if (isNaN(value) || value < 0 || value > 100) {
-      alert('请输入有效的收益率值（0-100%之间）');
-      return;
-    }
-    
-    // 将百分比转换为小数并保存
-    const decimalValue = value / 100;
-    formatUtils.setMinReturn(decimalValue);
-    
-    // 显示保存成功提示
-    const saveBtn = document.getElementById('save-return-btn');
-    const originalText = saveBtn.textContent;
-    saveBtn.textContent = '已保存';
-    saveBtn.classList.add('bg-green-500', 'hover:bg-green-600');
-    saveBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-    
-    setTimeout(() => {
-      saveBtn.textContent = originalText;
-      saveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-      saveBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
-    }, 2000);
-    
-    // 如果有数据，重新计算套利机会
-    if (PANEL_STATES[0].data.length > 0) {
-      comparisonRenderer.displayComparison4(PANEL_STATES[0].data);
-    }
-  },
-
-  // 初始化收益率输入框
-  initReturnInput: () => {
-    const input = document.getElementById('min-return-input');
-    const currentValue = formatUtils.getMinReturn();
-    input.value = (currentValue * 100).toFixed(1); // 显示为百分比
-  },
-
-  // 保存24小时成交量
-  saveVol24h: () => {
-    const input = document.getElementById('vol-24h-input');
-    const value = parseFloat(input.value);
-    
-    if (isNaN(value) || value < 0) {
-      alert('请输入有效的成交量值（大于等于0）');
-      return;
-    }
-    
-    // 保存成交量值
-    formatUtils.setVol24h(value);
-    
-    // 显示保存成功提示
-    const saveBtn = document.getElementById('save-vol-btn');
-    const originalText = saveBtn.textContent;
-    saveBtn.textContent = '已保存';
-    saveBtn.classList.add('bg-green-500', 'hover:bg-green-600');
-    saveBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-    
-    setTimeout(() => {
-      saveBtn.textContent = originalText;
-      saveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-      saveBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
-    }, 2000);
-    
-    // 如果有数据，重新计算套利机会
-    if (PANEL_STATES[0].data.length > 0) {
-      comparisonRenderer.displayComparison4(PANEL_STATES[0].data);
-    }
-  },
-
-  // 初始化24小时成交量输入框
-  initVol24hInput: () => {
-    const input = document.getElementById('vol-24h-input');
-    const currentValue = formatUtils.getVol24h();
-    input.value = currentValue.toString();
-  }
-};
-
 function init() {
-  // 初始化收益率输入框
-  returnManager.initReturnInput();
-  // 初始化24小时成交量输入框
-  returnManager.initVol24hInput();
-  
   // 交易所单选框初始化
   [1, 2].forEach(panelId => {
     const container = document.querySelector(`[data-panel="${panelId}"] .exchange-radios div`);
@@ -357,16 +242,8 @@ function init() {
 // 在模块顶层直接定义函数（保持原有实现）
 let openedWindows = [];
 function toggleAllLinks(button) {
-  const links = button.dataset.links.split(',').filter(link => link && link.trim() !== '');
+  const links = button.dataset.links.split(',');
   const isOpen = button.dataset.state === 'open';
-
-  // 如果没有有效链接，禁用按钮
-  if (links.length === 0) {
-    button.textContent = '无链接';
-    button.style.opacity = '0.5';
-    button.style.cursor = 'not-allowed';
-    return;
-  }
 
   // 关闭所有窗口
   if (isOpen) {
@@ -389,8 +266,6 @@ function toggleAllLinks(button) {
 const updatePanel = panelManager.updateSinglePanel;
 const toggleSort = panelManager.handleSort;
 const refreshPanels = eventHandlers.handleRefresh;
-const saveMinReturn = returnManager.saveMinReturn;
-const saveVol24h = returnManager.saveVol24h;
 
 // 导出接口 -----------------------------------------------------
 export {
@@ -398,7 +273,5 @@ export {
   updatePanel,
   toggleSort,
   toggleAllLinks,
-  refreshPanels,
-  saveMinReturn,
-  saveVol24h
+  refreshPanels
 };

@@ -1,4 +1,4 @@
-import { EXCHANGES as StaticExchanges, FILTER_CONFIG } from './staticData.js';
+import { EXCHANGES as StaticExchanges, FILTER_CONFIG, VOL_24H } from './staticData.js';
 import { formatUtils } from './tools.js';
 
 const symbolPrice = formatUtils.getSymbolPrice();
@@ -43,7 +43,7 @@ const createExchangeParser = (exchangeConfig) => {
       const vol24h = formatUtils.processBinanceVolume(finalQuoteVolume, symbolObj.after);
       console.log(vol24h,'========vol24h');
       console.log(symbolObj,'========symbolObj');
-      if (vol24h >= formatUtils.getVol24h()) {
+      if (vol24h >= VOL_24H) {
       console.log(vol24h,'========vol24h--------------20000');
         acc.push({
           symbol: symbolObj.symbol,
